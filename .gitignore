@@ -286,4 +286,6 @@ __pycache__/
 *.btm.cs
 *.odx.cs
 *.xsd.cs
-ProjectSazan/ProjectSazan.Web/wwwroot/
+
+ProjectSazan.Web/wwwroot/lib/
+ProjectSazan/ProjectSazan.Web/wwwroot/lib/
