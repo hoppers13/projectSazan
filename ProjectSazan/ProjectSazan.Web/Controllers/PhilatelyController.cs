@@ -1,16 +1,35 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using ProjectSazan.Persistence;
+using Microsoft.AspNetCore.Identity;
+using ProjectSazan.Web.Models;
+using ProjectSazan.Domain;
 
 namespace ProjectSazan.Web.Controllers
 {
+	[Authorize]
     public class PhilatelyController : Controller
     {
-        public IActionResult Index()
+		IPhilatelicCollectionRepository repository;
+		UserManager<ApplicationUser> userManager;
+
+		public PhilatelyController(
+			 UserManager<ApplicationUser> userManager,
+			 IPhilatelicCollectionRepository repository)
+		{
+			this.userManager = userManager;
+			this.repository = repository;
+		}
+
+		[HttpGet]
+        public async Task<IActionResult> Index()
         {
-            return View();
+			var userIdentity = new UserIdentity { Id = userManager.GetUserName(HttpContext.User) };
+
+			var model = await repository.GetCollectionNamesAsync(userIdentity);
+
+            return View(model);
         }
 
         public IActionResult Collection()

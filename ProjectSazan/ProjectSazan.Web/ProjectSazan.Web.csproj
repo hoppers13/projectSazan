@@ -35,6 +35,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ProjectSazan.Domain\ProjectSazan.Domain.csproj" />
+    <ProjectReference Include="..\ProjectSazan.Persistence.InMemory\ProjectSazan.Persistence.InMemory.csproj" />
+    <ProjectReference Include="..\ProjectSazan.Persistence\ProjectSazan.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

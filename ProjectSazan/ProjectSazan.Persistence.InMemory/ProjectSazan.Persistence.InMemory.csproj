@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ProjectSazan.Domain\ProjectSazan.Domain.csproj" />
+    <ProjectReference Include="..\ProjectSazan.Persistence\ProjectSazan.Persistence.csproj" />
+  </ItemGroup>
+
+</Project>

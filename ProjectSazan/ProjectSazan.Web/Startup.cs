@@ -12,6 +12,8 @@ using Microsoft.Extensions.Logging;
 using ProjectSazan.Web.Data;
 using ProjectSazan.Web.Models;
 using ProjectSazan.Web.Services;
+using ProjectSazan.Persistence;
+using ProjectSazan.Persistence.InMemory;
 
 namespace ProjectSazan.Web
 {
@@ -52,6 +54,7 @@ namespace ProjectSazan.Web
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
+			services.AddTransient<IPhilatelicCollectionRepository, PhilatelicCollectionRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
