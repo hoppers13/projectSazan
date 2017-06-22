@@ -13,7 +13,7 @@ namespace ProjectSazan.Persistence.InMemory.SampleData
 					{
 						"gianluca@email.com" ,
 						new List<string>{
-							"Italian Islandas ot the Mediterranean",
+							"Italian Islands ot the Mediterranean",
 							"Dalmatia"
 						}
 					},
