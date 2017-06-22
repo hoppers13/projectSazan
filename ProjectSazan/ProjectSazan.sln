@@ -7,6 +7,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectSazan.Web", "Project
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectSazan.Domain", "ProjectSazan.Domain\ProjectSazan.Domain.csproj", "{11B1234C-9823-4FC4-B4F4-644A5177497C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectSazan.Persistence.DocumentDB", "ProjectSazan.Persistence.DocumentDB\ProjectSazan.Persistence.DocumentDB.csproj", "{DE02897A-4C58-47BD-951D-2C60C7630E60}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "wireframes", "wireframes", "{59862290-96EC-4E4D-96B9-5ABCC4D252C1}"
+	ProjectSection(SolutionItems) = preProject
+		..\Wireframes\collection.html = ..\Wireframes\collection.html
+		..\Wireframes\index.html = ..\Wireframes\index.html
+		..\Wireframes\requestquote.html = ..\Wireframes\requestquote.html
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +30,10 @@ Global
 		{11B1234C-9823-4FC4-B4F4-644A5177497C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11B1234C-9823-4FC4-B4F4-644A5177497C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11B1234C-9823-4FC4-B4F4-644A5177497C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE02897A-4C58-47BD-951D-2C60C7630E60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE02897A-4C58-47BD-951D-2C60C7630E60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE02897A-4C58-47BD-951D-2C60C7630E60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE02897A-4C58-47BD-951D-2C60C7630E60}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
