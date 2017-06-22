@@ -1,10 +1,12 @@
 @using Newtonsoft.Json
-@model IEnumerable<string>
+@using System.Linq
+@using ProjectSazan.Domain.Philately
+@model IEnumerable<PhilatelicCollection>
 
 
 @{
     ViewData["Title"] = "[Collector] collections";
-	var collections = JsonConvert.SerializeObject(Model);
+    var collections = Model.Select(x => new { id = x.Id, title = x.Title });
 }
 
 <h3>Collections</h3>
@@ -12,25 +14,14 @@
     <div class="col-md-12"><a asp-controller="philately" asp-action="addCollection">[+] add collection</a></div>
 </div>
 <hr />
+@{ var url = 123;}
 <div id="collection-list" class="row">
 	<ul>
-		<li v-for="coll in collections"><a asp-area="" asp-controller="philately" asp-action="collection" asp-route-id="MedIslands">{{coll}}</a></li>		
+        @foreach (var coll in collections)
+        {
+            <li v-for="coll in collections"><a asp-area="" asp-controller="philately" asp-action="collection" asp-route-id="@coll.id">@coll.title</a></li>
+        }				
 	</ul>
 </div>
-
-@section Scripts{
-	<script src="https://unpkg.com/vue"></script>
-	<script>
-		var result = {
-			collections:	@Html.Raw(collections)			
-		};
-
-		var app = new Vue({
-			el: '#collection-list',
-			data: result
-		});
-
-	</script>
-}
 
 

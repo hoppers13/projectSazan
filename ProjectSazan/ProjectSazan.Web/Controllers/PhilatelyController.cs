@@ -5,6 +5,7 @@ using ProjectSazan.Persistence;
 using Microsoft.AspNetCore.Identity;
 using ProjectSazan.Web.Models;
 using ProjectSazan.Domain;
+using System;
 
 namespace ProjectSazan.Web.Controllers
 {
@@ -32,7 +33,7 @@ namespace ProjectSazan.Web.Controllers
             return View(model);
         }
 
-        public IActionResult Collection()
+        public IActionResult Collection(Guid id)
         {
             return View();
         }

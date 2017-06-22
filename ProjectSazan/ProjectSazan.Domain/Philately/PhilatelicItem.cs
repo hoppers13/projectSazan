@@ -2,7 +2,7 @@
 
 namespace ProjectSazan.Domain.Philately
 {
-    public class PhilatelicItem
+    public class PhilatelicItem : ICollectable
     {
         public Guid Id { get; set; }
         public int Year { get; set; }

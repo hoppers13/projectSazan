@@ -13,3 +13,22 @@
     <div class="col-md-4">details</div>
 </div>
 
+
+@section Scripts{
+    <script src="https://unpkg.com/vue"></script>
+    <script>
+		var result = {
+			collections:	@Html.Raw("blah")
+		};
+
+		var app = new Vue({
+			el: '#collection-list',
+			data: result
+		});
+
+    </script>
+}
+
+
+
+
