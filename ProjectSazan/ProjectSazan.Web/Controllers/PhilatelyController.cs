@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using ProjectSazan.Web.Models;
 using ProjectSazan.Domain;
 using System;
+using ProjectSazan.Web.Models.PhilatelyViewModels;
 
 namespace ProjectSazan.Web.Controllers
 {
@@ -37,5 +38,14 @@ namespace ProjectSazan.Web.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddCollection(AddCollection newCollection)
+        {
+            // do something
+            return RedirectToAction("index");
+        }
+
     }
 }

@@ -1,6 +1,7 @@
 @using Newtonsoft.Json
 @using System.Linq
 @using ProjectSazan.Domain.Philately
+@using ProjectSazan.Web.Models.PhilatelyViewModels
 @model IEnumerable<PhilatelicCollection>
 
 
@@ -11,10 +12,10 @@
 
 <h3>Collections</h3>
 <div class="row">
-    <div class="col-md-12"><a asp-controller="philately" asp-action="addCollection">[+] add collection</a></div>
+    <div class="col-md-12"><a data-toggle="collapse" data-target="#new-collection" href="#">add collection</a></div>
 </div>
+@Html.Partial("_addCollection", new AddCollection())
 <hr />
-@{ var url = 123;}
 <div id="collection-list" class="row">
 	<ul>
         @foreach (var coll in collections)
