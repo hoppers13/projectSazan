@@ -40,8 +40,12 @@ namespace ProjectSazan.Web.Controllers
         }
         
         [HttpPost]
-        public IActionResult CreateCollection(AddCollection coll)
+        public async Task<IActionResult> CreateCollection(AddCollection coll)
         {
+            var userIdentity = new UserIdentity { Id = userManager.GetUserName(HttpContext.User) };
+
+            await repository.CreateCollection(userIdentity, coll.NewCollection);
+
             return RedirectToAction("index");
         }
 

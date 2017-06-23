@@ -8,5 +8,6 @@ namespace ProjectSazan.Persistence
     public interface IPhilatelicCollectionRepository
     {
 		Task<IEnumerable<ICollectableCollection>> GetCollectionNamesAsync(UserIdentity collectorId);
+        Task CreateCollection(UserIdentity userIdentity, string newCollection);
     }
 }
