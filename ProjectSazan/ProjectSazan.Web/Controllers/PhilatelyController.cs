@@ -38,14 +38,21 @@ namespace ProjectSazan.Web.Controllers
         {
             return View();
         }
-
+        
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddCollection(AddCollection newCollection)
+        public IActionResult CreateCollection(AddCollection coll)
         {
-            // do something
             return RedirectToAction("index");
         }
+
+        [HttpPost]
+        public IActionResult AddItem(PhilstelicItemViewModel item)
+        {
+            var a = item;
+
+            return RedirectToAction("index");
+        }
+
 
     }
 }

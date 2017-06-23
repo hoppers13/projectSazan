@@ -1,0 +1,8 @@
+@using ProjectSazan.Web.Models.PhilatelyViewModels
+@model PhilstelicItemViewModel
+
+<form asp-controller="philately" asp-action="addItem" method="post">
+    Number: <input asp-for="Number"/><br/>
+    Description: <input asp-for="Description" /><br/>
+    <button type="submit">Save</button>
+</form>

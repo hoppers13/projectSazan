@@ -1,9 +1,14 @@
 @using ProjectSazan.Web.Models.PhilatelyViewModels
 @model AddCollection
 
-<div id="new-collection" class="collapse form-group row">
-    <form asp-controller="philately" asp-action="addCollection" method="post">
-        <div class="col-sm-7"><input asp-for="NewCollection" type="text" class="form-control" /></div>
-        <div class="col-sm-5"> <button type="submit" class="btn btn-primary">Save</button></div>
+
+<div id="new-collection" class="collapse row">
+    <form asp-controller="philately" asp-action="CreateCollection" method="post">
+        <div class="col-sm-7">
+            <input asp-for="NewCollection" class="form-control"/>
+        </div>
+        <div class="col-sm-5">
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>        
     </form>
 </div>
