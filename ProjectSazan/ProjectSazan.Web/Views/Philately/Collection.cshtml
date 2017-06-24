@@ -14,6 +14,7 @@
 		return items.Select(item => new
 		{
 			item.Id,
+			TargetId = $"#{item.Id}",
 			item.Year,
 			item.CatalogueReference.Area,
 			Catalogue = abbr[item.CatalogueReference.Catalogue],
@@ -48,10 +49,13 @@
 	</thead>
 	<tbody>
 		<tr v-for="item in items">
-			<td class="col-md-8">{{item.Year}},{{item.Area}} {{item.Description}} ({{item.Catalogue}} {{item.Number}})</td>
+			<td class="col-md-8">
+				<div>{{item.Year}},{{item.Area}} {{item.Description}} ({{item.Catalogue}} {{item.Number}})</div>
+				<div :id="item.Id" class="collapse">carousel</div>
+			</td>
 			<td class="col-md-2">{{item.Acquired}}</td>
 			<td class="col-md-2">{{item.Price}}</td>
-			<td class="col-md-2"><a href="#">scans</a></td>
+			<td class="col-md-2"><a data-toggle="collapse" :data-target="item.TargetId" href="#">scans</a></td>
 		</tr>
 	</tbody>
 </table>
