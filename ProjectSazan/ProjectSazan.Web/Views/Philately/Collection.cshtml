@@ -1,4 +1,5 @@
 @using Newtonsoft.Json
+@using ProjectSazan.Domain
 @using ProjectSazan.Domain.Philately
 @model IPhilatelicCollection
 
@@ -8,6 +9,7 @@
 		if (items == null) return new List<object>();
 
 		var abbr = new CatalogueAbbreviations();
+		var symbols = new CurrencySymbols();
 
 		return items.Select(item => new
 		{
@@ -16,7 +18,9 @@
 			item.CatalogueReference.Area,
 			Catalogue = abbr[item.CatalogueReference.Catalogue],
 			item.CatalogueReference.Number,
-			item.Description
+			item.Description,
+			Acquired = item.Acquired.ToString("dd MMM yyyy"),
+			Price = $"{symbols[item.Paid.Currency]}{item.Paid.Figure}"
 		});
 	}
 }
@@ -32,16 +36,26 @@
 	<div class="col-md-12"><a asp-controller="philately" asp-action="addItem">[+] add item</a></div>
 </div>
 <hr />
-<div id="collection-items">
-	<div v-for="item in items" class="row">
-		<div class="col-md-8">
-			{{item.Year}},{{item.Area}} {{item.Description}} ({{item.Catalogue}} {{item.Number}})
-		</div>
-		<div class="col-md-4">
-			<a href="#">scans</a>
-		</div>
-	</div>
-</div>
+<table id="collection-items" class="table table-striped">
+	<thead>
+		<tr>
+			<th class="col-md-6"></th>
+			<th class="col-md-2">Acquired</th>
+			<th class="col-md-2">Paid</th>
+			<th class="col-md-2"></th>
+			
+		</tr>
+	</thead>
+	<tbody>
+		<tr v-for="item in items">
+			<td class="col-md-8">{{item.Year}},{{item.Area}} {{item.Description}} ({{item.Catalogue}} {{item.Number}})</td>
+			<td class="col-md-2">{{item.Acquired}}</td>
+			<td class="col-md-2">{{item.Price}}</td>
+			<td class="col-md-2"><a href="#">scans</a></td>
+		</tr>
+	</tbody>
+</table>
+
 
 @section Scripts{
 	<script src="https://unpkg.com/vue"></script>
