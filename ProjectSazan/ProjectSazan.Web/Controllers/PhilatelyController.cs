@@ -34,9 +34,11 @@ namespace ProjectSazan.Web.Controllers
             return View(model);
         }
 
-        public IActionResult Collection(Guid id)
+        public async Task<IActionResult> Collection(Guid id)
         {
-            return View();
+			var model = await repository.GetCollectionAsync(id);
+
+            return View(model);
         }
         
         [HttpPost]
@@ -44,7 +46,7 @@ namespace ProjectSazan.Web.Controllers
         {
             var userIdentity = new UserIdentity { Id = userManager.GetUserName(HttpContext.User) };
 
-            await repository.CreateCollection(userIdentity, coll.NewCollection);
+            await repository.CreateCollectionAsync(userIdentity, coll.NewCollection);
 
             return RedirectToAction("index");
         }

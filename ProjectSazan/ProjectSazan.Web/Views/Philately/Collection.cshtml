@@ -1,34 +1,57 @@
+@using Newtonsoft.Json
+@using ProjectSazan.Domain.Philately
+@model IPhilatelicCollection
+
+@functions{
+	public object GetDisplayItems(IEnumerable<PhilatelicItem> items)
+	{
+		if (items == null) return new List<object>();
+
+		var abbr = new CatalogueAbbreviations();
+
+		return items.Select(item => new
+		{
+			item.Id,
+			item.Year,
+			item.CatalogueReference.Area,
+			Catalogue = abbr[item.CatalogueReference.Catalogue],
+			item.CatalogueReference.Number,
+			item.Description
+		});
+	}
+}
 
 @{
-    ViewData["Title"] = "Collection";
+	ViewData["Title"] = "Collection";
+	var displayItems = GetDisplayItems(Model.Items);
+	var items = JsonConvert.SerializeObject(displayItems);
 }
 
 <h2>Collection</h2>
 <div class="row">
-    <div class="col-md-12"><a asp-controller="philately" asp-action="addItem">[+] add item</a></div>
+	<div class="col-md-12"><a asp-controller="philately" asp-action="addItem">[+] add item</a></div>
 </div>
 <hr />
-<div class="row">
-    <div class="col-md-8"> Item 1</div>
-    <div class="col-md-4">details</div>
+<div id="collection-items">
+	<div v-for="item in items" class="row">
+		<div class="col-md-8">
+			{{item.Year}},{{item.Area}} {{item.Description}} ({{item.Catalogue}} {{item.Number}})
+		</div>
+		<div class="col-md-4">
+			<a href="#">scans</a>
+		</div>
+	</div>
 </div>
 
-
 @section Scripts{
-    <script src="https://unpkg.com/vue"></script>
-    <script>
-		var result = {
-			collections:	@Html.Raw("blah")
-		};
+	<script src="https://unpkg.com/vue"></script>
+	<script>
 
 		var app = new Vue({
-			el: '#collection-list',
-			data: result
+			el: '#collection-items',
+			data: {
+					items: @Html.Raw(items)
+				  }
 		});
-
-    </script>
+	</script>
 }
-
-
-
-

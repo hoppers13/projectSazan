@@ -9,30 +9,34 @@ namespace ProjectSazan.Persistence.InMemory
 {
 	public class PhilatelicCollectionRepository : IPhilatelicCollectionRepository
 	{
-        public Task CreateCollection(UserIdentity userIdentity, string newCollection)
+        public Task CreateCollectionAsync(UserIdentity userIdentity, string newCollection)
         {
             var collection = new PhilatelicCollection { Id = Guid.NewGuid(), CollectorId = userIdentity.Id, Title = newCollection }; 
 
             return Task.Run(() =>
             {
-                if (InMemoryStore.PhilatelicCollections.ContainsKey(userIdentity.Id))
-                {
-                    var collections = InMemoryStore.PhilatelicCollections[userIdentity.Id].ToList();
-                    collections.Add(collection);
+				InMemoryStore.PhilatelicCollections.Add(collection.Id, collection);
 
-                    InMemoryStore.PhilatelicCollections[userIdentity.Id] = collections;
+                if (InMemoryStore.CollectorColletions.ContainsKey(userIdentity.Id))
+                {
+                    InMemoryStore.CollectorColletions[userIdentity.Id].Add(collection.Id);                    
                 }
                 else
                 {
-                    InMemoryStore.PhilatelicCollections.Add(userIdentity.Id, new List<PhilatelicCollection> { collection });
-                }
-                
+                    InMemoryStore.CollectorColletions.Add(userIdentity.Id, new List<Guid> { collection.Id });
+                }                
             });            
         }
 
-        public Task<IEnumerable<ICollectableCollection>> GetCollectionNamesAsync(UserIdentity collectorId)
+		public Task<IPhilatelicCollection> GetCollectionAsync(Guid id)
 		{
-			return Task.Run(() => InMemoryStore.PhilatelicCollections[collectorId.Id] as IEnumerable<ICollectableCollection>);			
+			return Task.Run(() =>  InMemoryStore.PhilatelicCollections[id]);
+		}
+
+		public Task<IEnumerable<ICollectableCollection>> GetCollectionNamesAsync(UserIdentity collectorId)
+		{
+			return Task.Run(() => InMemoryStore.CollectorColletions[collectorId.Id]
+										.Select(id => InMemoryStore.PhilatelicCollections[id]) as IEnumerable<ICollectableCollection>);			
 		}
 	}
 }
