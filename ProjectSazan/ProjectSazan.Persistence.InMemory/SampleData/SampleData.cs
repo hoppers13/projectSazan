@@ -55,7 +55,7 @@ namespace ProjectSazan.Persistence.InMemory.SampleData
 									   CatalogueReference = new CatalogueReference{ Catalogue = CataloguesInUse.SASSONE, Area = "Egeo", Number = "n/a"},
 									   Description = "Ferrucci, saggi per tutte le isole e posta aerea",
 									   Conditions = Conditions.MNH,
-                                       Scans = new Scans(){ Scan.NoScan},
+                                       Scans = new Scans(),
                                        Acquired = new DateTime(2017, 4, 1),
 									   Paid = new Price{Currency = Currency.EUR, Figure = 240}
 								   }

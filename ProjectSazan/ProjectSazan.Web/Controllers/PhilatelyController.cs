@@ -52,7 +52,7 @@ namespace ProjectSazan.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddItem(PhilstelicItemViewModel item)
+        public IActionResult AddItem(PhilatelicItemViewModel item)
         {
             var a = item;
 

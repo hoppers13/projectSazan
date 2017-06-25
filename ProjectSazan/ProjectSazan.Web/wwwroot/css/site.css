@@ -14,6 +14,18 @@
     float:left;
 }
 
+.info {
+    font-size: larger;
+    color: #0d1a67;
+}
+
+.warning {
+    color:red;
+    font-size:smaller;
+    font-weight:bold;
+}
+
+
 /* Carousel */
 .carousel-caption p {
     font-size: 20px;

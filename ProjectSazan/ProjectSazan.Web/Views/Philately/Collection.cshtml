@@ -1,6 +1,7 @@
 @using Newtonsoft.Json
 @using ProjectSazan.Domain
 @using ProjectSazan.Domain.Philately
+@using ProjectSazan.Web.Models.PhilatelyViewModels
 @model IPhilatelicCollection
 
 @functions{
@@ -33,9 +34,36 @@
     var items = JsonConvert.SerializeObject(displayItems);
 }
 
+
+<div id="dispaly-scans" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id="handlebars-placeholder" class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="modal-title">{{Year}},{{Area}} {{Description}} ({{Catalogue}} {{Number}})</h5>
+            </div>
+            <div class="modal-body">
+                   Carousel here
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
 <h2>@Model.Title</h2>
 <div class="row">
-    <div class="col-md-12"><a asp-controller="philately" asp-action="addItem">[+] add item</a></div>
+    <div class="col-md-12"><a data-toggle="collapse" data-target="#philatelic-item-form" href="#">add item</a></div>
+</div>
+<div id="philatelic-item-form" class="collapse">
+    @Html.Partial("_addPhilatelicItem", new PhilatelicItemViewModel())
 </div>
 <hr />
 <table id="collection-items" class="table table-striped">
@@ -48,17 +76,22 @@
 
         </tr>
     </thead>
-    <tbody>
+    <tbody>        
         <tr v-for="item in items">
             <td class="col-md-8">
                 <div>{{item.Year}},{{item.Area}} {{item.Description}} ({{item.Catalogue}} {{item.Number}})</div>
-                <div :id="item.Id" class="collapse" >
-                    <div v-for="scan in item.Scans" class="float-left scan-box">
-                        <figure>
-                            <img :src="scan.Image" :alt="scan.Caption" class="scan-image" />
-                            <figcaption>{{scan.Caption}}</figcaption>
-                        </figure>
-                    </div>                    
+                <div :id="item.Id" class="collapse">
+                    <template v-if="item.Scans.length > 0">
+                        <div v-for="scan in item.Scans" class="float-left scan-box">
+                            <a data-toggle="modal" data-target="#dispaly-scans" href="#">
+                                <figure>
+                                    <img :src="scan.Image" :alt="scan.Caption" class="scan-image" />
+                                    <figcaption>{{scan.Caption}}</figcaption>
+                                </figure>
+                            </a>                            
+                        </div>
+                    </template>
+                    <h5 class="info" v-else> There are no scans yet</h5>
                 </div>
             </td>
             <td class="col-md-2">{{item.Acquired}}</td>
@@ -69,15 +102,33 @@
 </table>
 
 
+
+
 @section Scripts{
     <script src="https://unpkg.com/vue"></script>
     <script>
+
+        function assignAppModalItem(item) {
+            appModal.data = item;
+        }
 
 		var app = new Vue({
 			el: '#collection-items',
 			data: {
 					items: @Html.Raw(items)
 				  }
-		});
+        });
+
+
+        var appModal = new Vue({
+            el: '#dispaly-scans',
+            data: {
+                "Year": 9999,
+                "Area": "some area",
+                "Description": "a description",
+                "Catalogue": "a catalogue",
+                "Number": "00 az"
+            }
+        })
     </script>
 }
