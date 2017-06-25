@@ -107,30 +107,39 @@
 @section Scripts{
     <script src="https://unpkg.com/vue"></script>
     <script>
+        $(function () {
+            var collectionItems = @Html.Raw(items);
 
-        var collectionItems = @Html.Raw(items);
+            $('div.scan-box a').click(function () {
+                var ancestorId = $(this).parent().id;
+                alert(ancestorId);
 
-        function assignAppModalItem(item) {
-            appModal.data = item;
-        }
+             });
 
-		var app = new Vue({
-			el: '#collection-items',
-			data: {
-                    items: collectionItems
-				  }
+
+            function assignAppModalItem(item) {
+                appModal.data = item;
+            }
+
+		    var app = new Vue({
+			    el: '#collection-items',
+			    data: {
+                        items: collectionItems
+				      }
+            });
+
+
+            var appModal = new Vue({
+                el: '#dispaly-scans',
+                data: {
+                    "Year": 9999,
+                    "Area": "some area",
+                    "Description": "a description",
+                    "Catalogue": "a catalogue",
+                    "Number": "00 az"
+                }
+            })
         });
 
-
-        var appModal = new Vue({
-            el: '#dispaly-scans',
-            data: {
-                "Year": 9999,
-                "Area": "some area",
-                "Description": "a description",
-                "Catalogue": "a catalogue",
-                "Number": "00 az"
-            }
-        })
     </script>
 }
