@@ -44,7 +44,7 @@
 			</div>
 			<div class="modal-body">
 				<!-- CAROUSEL -->
-				@Html.Partial("_itemScansCarousel")								
+				@Html.Partial("_itemScansCarousel")
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -65,17 +65,21 @@
 <table id="collection-items" class="table table-striped">
 	<thead>
 		<tr>
-			<th class="col-md-6"></th>
+			<th class="col-md-7"></th>
 			<th class="col-md-2">Acquired</th>
-			<th class="col-md-2">Paid</th>
-			<th class="col-md-2"></th>
+			<th class="col-md-1">Paid</th>
+			<th class="col-md-2">Add to quote</th>
 
 		</tr>
 	</thead>
 	<tbody>
 		<tr v-for="item in items">
-			<td class="col-md-8">
-				<div>{{item.Year}},{{item.Area}} {{item.Description}} ({{item.Catalogue}} {{item.Number}})</div>
+			<td class="col-md-7">
+				<div>
+					<a data-toggle="collapse" :data-target="item.TargetId" href="#">
+						{{item.Year}},{{item.Area}} {{item.Description}} ({{item.Catalogue}} {{item.Number}})
+					</a>
+				</div>
 				<div :id="item.Id" class="collapse">
 					<template v-if="item.Scans.length > 0">
 						<div v-for="scan in item.Scans" class="float-left scan-box">
@@ -91,8 +95,8 @@
 				</div>
 			</td>
 			<td class="col-md-2">{{item.Acquired}}</td>
-			<td class="col-md-2">{{item.Price}}</td>
-			<td class="col-md-2"><a data-toggle="collapse" :data-target="item.TargetId" href="#">scans</a></td>
+			<td class="col-md-1">{{item.Price}}</td>
+			<td class="col-md-2"><input type="checkbox" /></td>
 		</tr>
 	</tbody>
 </table>
@@ -126,20 +130,20 @@
 				"Catalogue": "",
 				"Number": "",
 				"Scans": []
-			}; 
+			};
 
             var appModal = new Vue({
                 el: '#dispaly-scans',
-				data: modalCarousel				
+				data: modalCarousel
 			})
 
 			$('div.scan-box').click(function () {
 				var selectedItemId = $(this).parent().attr('id');
 				var selectedItem = $.grep(collectionItems, function (e) { return e.Id == selectedItemId})[0];
-				appModalReplaceItem(selectedItem);				
+				appModalReplaceItem(selectedItem);
 			});
 
-			function appModalReplaceItem(item) {				
+			function appModalReplaceItem(item) {
 				modalCarousel.Year = item.Year;
 				modalCarousel.Area = item.Area;
 				modalCarousel.Description = item.Description;
