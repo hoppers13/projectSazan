@@ -43,7 +43,8 @@
 				<h5 class="modal-title">{{Year}},{{Area}} {{Description}} ({{Catalogue}} {{Number}})</h5>
 			</div>
 			<div class="modal-body">
-				Carousel here
+				<!-- CAROUSEL -->
+				@Html.Partial("_itemScansCarousel")								
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -51,11 +52,6 @@
 		</div>
 	</div>
 </div>
-
-
-
-
-
 
 
 <h2>@Model.Title</h2>
@@ -128,12 +124,13 @@
 				"Area": "",
 				"Description": "",
 				"Catalogue": "",
-				"Number": ""
+				"Number": "",
+				"Scans": []
 			}; 
 
             var appModal = new Vue({
                 el: '#dispaly-scans',
-                data: modalCarousel				
+				data: modalCarousel				
 			})
 
 			$('div.scan-box').click(function () {
@@ -142,12 +139,13 @@
 				appModalReplaceItem(selectedItem);				
 			});
 
-			function appModalReplaceItem(item) {
+			function appModalReplaceItem(item) {				
 				modalCarousel.Year = item.Year;
 				modalCarousel.Area = item.Area;
 				modalCarousel.Description = item.Description;
 				modalCarousel.Catalogue = item.Catalogue;
 				modalCarousel.Number = item.Number;
+				modalCarousel.Scans = item.Scans;
 			}
         });
 
