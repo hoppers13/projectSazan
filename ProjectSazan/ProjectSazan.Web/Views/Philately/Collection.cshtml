@@ -4,66 +4,105 @@
 @model IPhilatelicCollection
 
 @functions{
-	public object GetDisplayItems(IEnumerable<PhilatelicItem> items)
-	{
-		if (items == null) return new List<object>();
+    public object GetDisplayItems(IEnumerable<PhilatelicItem> items)
+    {
+        if (items == null) return new List<object>();
 
-		var abbr = new CatalogueAbbreviations();
-		var symbols = new CurrencySymbols();
+        var abbr = new CatalogueAbbreviations();
+        var symbols = new CurrencySymbols();
 
-		return items.Select(item => new
-		{
-			item.Id,
-			TargetId = $"#{item.Id}",
-			item.Year,
-			item.CatalogueReference.Area,
-			Catalogue = abbr[item.CatalogueReference.Catalogue],
-			item.CatalogueReference.Number,
-			item.Description,
-			Acquired = item.Acquired.ToString("dd MMM yyyy"),
-			Price = $"{symbols[item.Paid.Currency]}{item.Paid.Figure}"
-		});
-	}
+        return items.Select(item => new
+        {
+            // actual data
+            item.Id,
+            item.Year,
+            item.CatalogueReference.Area,
+            Catalogue = abbr[item.CatalogueReference.Catalogue],
+            item.CatalogueReference.Number,
+            item.Description,
+            Acquired = item.Acquired.ToString("dd MMM yyyy"),
+            Price = $"{symbols[item.Paid.Currency]}{item.Paid.Figure}",
+
+            // UI related properties
+            TargetId = $"#{item.Id}",
+            CarouselId = $"carousel-{item.Id}",
+            CarouselSelector = $"#carousel-{item.Id}"
+        });
+    }
 }
 
 @{
-	ViewData["Title"] = "Collection";
-	var displayItems = GetDisplayItems(Model.Items);
-	var items = JsonConvert.SerializeObject(displayItems);
+    ViewData["Title"] = "Collection";
+    var displayItems = GetDisplayItems(Model.Items);
+    var items = JsonConvert.SerializeObject(displayItems);
 }
 
 <h2>Collection</h2>
 <div class="row">
-	<div class="col-md-12"><a asp-controller="philately" asp-action="addItem">[+] add item</a></div>
+    <div class="col-md-12"><a asp-controller="philately" asp-action="addItem">[+] add item</a></div>
 </div>
 <hr />
 <table id="collection-items" class="table table-striped">
-	<thead>
-		<tr>
-			<th class="col-md-6"></th>
-			<th class="col-md-2">Acquired</th>
-			<th class="col-md-2">Paid</th>
-			<th class="col-md-2"></th>
-			
-		</tr>
-	</thead>
-	<tbody>
-		<tr v-for="item in items">
-			<td class="col-md-8">
-				<div>{{item.Year}},{{item.Area}} {{item.Description}} ({{item.Catalogue}} {{item.Number}})</div>
-				<div :id="item.Id" class="collapse">carousel</div>
-			</td>
-			<td class="col-md-2">{{item.Acquired}}</td>
-			<td class="col-md-2">{{item.Price}}</td>
-			<td class="col-md-2"><a data-toggle="collapse" :data-target="item.TargetId" href="#">scans</a></td>
-		</tr>
-	</tbody>
+    <thead>
+        <tr>
+            <th class="col-md-6"></th>
+            <th class="col-md-2">Acquired</th>
+            <th class="col-md-2">Paid</th>
+            <th class="col-md-2"></th>
+
+        </tr>
+    </thead>
+    <tbody>
+        <tr v-for="item in items">
+            <td class="col-md-8">
+                <div>{{item.Year}},{{item.Area}} {{item.Description}} ({{item.Catalogue}} {{item.Number}})</div>
+                <div :id="item.Id" class="collapse scans-carousel">
+                    <div :id="CarouselId" class="carousel slide" data-ride="carousel">
+                        <ol class="carousel-indicators">
+                            <li :data-target="CarouselSelector" data-slide-to="0" class="active"></li>
+                            <li :data-target="CarouselSelector" data-slide-to="1"></li>
+                            <li :data-target="CarouselSelector" data-slide-to="2"></li>
+                        </ol>
+
+                        <div class="carousel-inner">
+                            <div class="item active">
+                                <img src="la.jpg" alt="Los Angeles">
+                            </div>
+
+                            <div class="item">
+                                <img src="chicago.jpg" alt="Chicago">
+                            </div>
+
+                            <div class="item">
+                                <img src="ny.jpg" alt="New York">
+                            </div>
+                        </div>
+                        <a class="left carousel-control" :href="CarouselSelector" data-slide="prev">
+                            <span class="glyphicon glyphicon-chevron-left"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="right carousel-control" :href="CarouselSelector" data-slide="next">
+                            <span class="glyphicon glyphicon-chevron-right"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                </div>
+            </td>
+
+
+
+
+            <td class="col-md-2">{{item.Acquired}}</td>
+            <td class="col-md-2">{{item.Price}}</td>
+            <td class="col-md-2"><a data-toggle="collapse" :data-target="item.TargetId" href="#">scans</a></td>
+        </tr>
+    </tbody>
 </table>
 
 
 @section Scripts{
-	<script src="https://unpkg.com/vue"></script>
-	<script>
+    <script src="https://unpkg.com/vue"></script>
+    <script>
 
 		var app = new Vue({
 			el: '#collection-items',
@@ -71,5 +110,5 @@
 					items: @Html.Raw(items)
 				  }
 		});
-	</script>
+    </script>
 }
