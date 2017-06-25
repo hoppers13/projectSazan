@@ -38,5 +38,8 @@
     <ProjectReference Include="..\ProjectSazan.Persistence.InMemory\ProjectSazan.Persistence.InMemory.csproj" />
     <ProjectReference Include="..\ProjectSazan.Persistence\ProjectSazan.Persistence.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\images\scans\" />
+  </ItemGroup>
 
 </Project>

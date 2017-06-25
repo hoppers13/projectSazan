@@ -10,8 +10,11 @@ namespace ProjectSazan.Domain.Philately
         public string Description { get; set; }
         public Conditions Conditions { get; set; }
         public CatalogueReference CatalogueReference { get; set; }
-		public DateTime Acquired { get; set; }
+        public Scans Scans { get; set; }
+                
+        public DateTime Acquired { get; set; }
 		public Price Paid { get; set; }
+
 
         
         //TODO: unit tests
