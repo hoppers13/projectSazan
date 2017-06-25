@@ -43,7 +43,7 @@
                 <h5 class="modal-title">{{Year}},{{Area}} {{Description}} ({{Catalogue}} {{Number}})</h5>
             </div>
             <div class="modal-body">
-                   Carousel here
+                Carousel here
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -76,7 +76,7 @@
 
         </tr>
     </thead>
-    <tbody>        
+    <tbody>
         <tr v-for="item in items">
             <td class="col-md-8">
                 <div>{{item.Year}},{{item.Area}} {{item.Description}} ({{item.Catalogue}} {{item.Number}})</div>
@@ -88,7 +88,7 @@
                                     <img :src="scan.Image" :alt="scan.Caption" class="scan-image" />
                                     <figcaption>{{scan.Caption}}</figcaption>
                                 </figure>
-                            </a>                            
+                            </a>
                         </div>
                     </template>
                     <h5 class="info" v-else> There are no scans yet</h5>
@@ -108,6 +108,8 @@
     <script src="https://unpkg.com/vue"></script>
     <script>
 
+        var collectionItems = @Html.Raw(items);
+
         function assignAppModalItem(item) {
             appModal.data = item;
         }
@@ -115,7 +117,7 @@
 		var app = new Vue({
 			el: '#collection-items',
 			data: {
-					items: @Html.Raw(items)
+                    items: collectionItems
 				  }
         });
 
