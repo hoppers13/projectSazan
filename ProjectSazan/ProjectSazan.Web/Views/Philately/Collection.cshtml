@@ -5,108 +5,103 @@
 @model IPhilatelicCollection
 
 @functions{
-	public object GetDisplayItems(IEnumerable<PhilatelicItem> items)
-	{
-		if (items == null) return new List<object>();
+    public object GetDisplayItems(IEnumerable<PhilatelicItem> items)
+    {
+        if (items == null) return new List<object>();
 
-		var abbr = new CatalogueAbbreviations();
-		var symbols = new CurrencySymbols();
+        var abbr = new CatalogueAbbreviations();
+        var symbols = new CurrencySymbols();
 
-		return items.Select(item => new
-		{
-			item.Id,
-			TargetId = $"#{item.Id}",
-			item.Year,
-			item.CatalogueReference.Area,
-			Catalogue = abbr[item.CatalogueReference.Catalogue],
-			item.CatalogueReference.Number,
-			item.Description,
-			item.Scans,
-			Acquired = item.Acquired.ToString("dd MMM yyyy"),
-			Price = $"{symbols[item.Paid.Currency]}{item.Paid.Figure}"
-		});
-	}
+        return items.Select(item => new
+        {
+            item.Id,
+            TargetId = $"#{item.Id}",
+            item.Year,
+            item.CatalogueReference.Area,
+            Catalogue = abbr[item.CatalogueReference.Catalogue],
+            item.CatalogueReference.Number,
+            item.Description,
+            item.Scans,
+            Acquired = item.Acquired.ToString("dd MMM yyyy"),
+            Price = $"{symbols[item.Paid.Currency]}{item.Paid.Figure}"
+        });
+    }
 }
 
 @{
-	ViewData["Title"] = Model.Title;
-	var displayItems = GetDisplayItems(Model.Items);
-	var items = JsonConvert.SerializeObject(displayItems);
+    ViewData["Title"] = Model.Title;
+    var displayItems = GetDisplayItems(Model.Items);
+    var items = JsonConvert.SerializeObject(displayItems);
 }
 
 
 <div id="dispaly-scans" class="modal fade" role="dialog">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div id="handlebars-placeholder" class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">&times;</button>
-				<h5 class="modal-title">{{Year}},{{Area}} {{Description}} ({{Catalogue}} {{Number}})</h5>
-			</div>
-			<div class="modal-body">
-				<!-- CAROUSEL -->
-				@Html.Partial("_itemScansCarousel")
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-			</div>
-		</div>
-	</div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id="handlebars-placeholder" class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h5 class="modal-title">{{Year}},{{Area}} {{Description}} ({{Catalogue}} {{Number}})</h5>
+            </div>
+            <div class="modal-body">
+                @Html.Partial("_itemScansCarousel")
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
-
 
 <h2>@Model.Title</h2>
 <div class="row">
-	<div class="col-md-12"><a data-toggle="collapse" data-target="#philatelic-item-form" href="#">add item</a></div>
+    <div class="col-md-12"><a data-toggle="collapse" data-target="#philatelic-item-form" href="#">add item</a></div>
 </div>
 <div id="philatelic-item-form" class="collapse">
-	@Html.Partial("_addPhilatelicItem", new PhilatelicItemViewModel())
+    @Html.Partial("_addPhilatelicItem", new PhilatelicItemViewModel())
 </div>
 <hr />
 <table id="collection-items" class="table table-striped">
-	<thead>
-		<tr>
-			<th class="col-md-7"></th>
-			<th class="col-md-2">Acquired</th>
-			<th class="col-md-1">Paid</th>
-			<th class="col-md-2">Add to quote</th>
+    <thead>
+        <tr>
+            <th class="col-md-7"></th>
+            <th class="col-md-2">Acquired</th>
+            <th class="col-md-1">Paid</th>
+            <th class="col-md-2">Add to quote</th>
 
-		</tr>
-	</thead>
-	<tbody>
-		<tr v-for="item in items">
-			<td class="col-md-7">
-				<div>
-					<a data-toggle="collapse" :data-target="item.TargetId" href="#">
-						{{item.Year}},{{item.Area}} {{item.Description}} ({{item.Catalogue}} {{item.Number}})
-					</a>
-				</div>
-				<div :id="item.Id" class="collapse">
-					<template v-if="item.Scans.length > 0">
-						<div v-for="scan in item.Scans" class="float-left scan-box">
-							<a data-toggle="modal" data-target="#dispaly-scans" href="#">
-								<figure>
-									<img :src="scan.Image" :alt="scan.Caption" class="scan-image" />
-									<figcaption>{{scan.Caption}}</figcaption>
-								</figure>
-							</a>
-						</div>
-					</template>
-					<h5 class="info" v-else> There are no scans yet</h5>
-				</div>
-			</td>
-			<td class="col-md-2">{{item.Acquired}}</td>
-			<td class="col-md-1">{{item.Price}}</td>
-			<td class="col-md-2"><input type="checkbox" /></td>
-		</tr>
-	</tbody>
+        </tr>
+    </thead>
+    <tbody>
+        <tr v-for="item in items">
+            <td class="col-md-7">
+                <div>
+                    <a data-toggle="collapse" :data-target="item.TargetId" href="#">
+                        {{item.Year}},{{item.Area}} {{item.Description}} ({{item.Catalogue}} {{item.Number}})
+                    </a>
+                </div>
+                <div :id="item.Id" class="collapse">
+                    <template v-if="item.Scans.length > 0">
+                        <div v-for="scan in item.Scans" class="float-left scan-box">
+                            <a data-toggle="modal" data-target="#dispaly-scans" href="#">
+                                <figure>
+                                    <img :src="scan.Image" :alt="scan.Caption" class="scan-image" />
+                                    <figcaption>{{scan.Caption}}</figcaption>
+                                </figure>
+                            </a>
+                        </div>
+                    </template>
+                    <h5 class="info" v-else> There are no scans yet</h5>
+                </div>
+            </td>
+            <td class="col-md-2">{{item.Acquired}}</td>
+            <td class="col-md-1">{{item.Price}}</td>
+            <td class="col-md-2"><input type="checkbox" /></td>
+        </tr>
+    </tbody>
 </table>
 
-
-
-
 @section Scripts{
-	<script src="https://unpkg.com/vue"></script>
-	<script>
+    <script src="https://unpkg.com/vue"></script>
+    <script>
 		var collectionItems = @Html.Raw(items);
 
 		function debugAlert(obj, caption) {
@@ -131,7 +126,7 @@
 				"Number": "",
 				"Scans": []
 			};
-
+            
             var appModal = new Vue({
                 el: '#dispaly-scans',
 				data: modalCarousel
@@ -143,6 +138,8 @@
 				appModalReplaceItem(selectedItem);
 			});
 
+            $('#AcquiredDatePicker').datetimepicker();
+            
 			function appModalReplaceItem(item) {
 				modalCarousel.Year = item.Year;
 				modalCarousel.Area = item.Area;
@@ -153,5 +150,5 @@
 			}
         });
 
-	</script>
+    </script>
 }
