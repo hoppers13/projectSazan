@@ -7,6 +7,7 @@ using ProjectSazan.Web.Models;
 using ProjectSazan.Domain;
 using System;
 using ProjectSazan.Web.Models.PhilatelyViewModels;
+using ProjectSazan.Domain.Philately;
 
 namespace ProjectSazan.Web.Controllers
 {
@@ -27,7 +28,7 @@ namespace ProjectSazan.Web.Controllers
 		[HttpGet]
         public async Task<IActionResult> Index()
         {
-			var userIdentity = new UserIdentity { Id = userManager.GetUserName(HttpContext.User) };
+			var userIdentity = GetUserIdentity();
 
 			var model = await repository.GetCollectionNamesAsync(userIdentity);
 
@@ -44,7 +45,7 @@ namespace ProjectSazan.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCollection(AddCollection coll)
         {
-            var userIdentity = new UserIdentity { Id = userManager.GetUserName(HttpContext.User) };
+            var userIdentity = GetUserIdentity();
 
             await repository.CreateCollectionAsync(userIdentity, coll.NewCollection);
 
@@ -52,13 +53,38 @@ namespace ProjectSazan.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddItem(PhilatelicItemViewModel item)
+        public async Task<IActionResult> AddItem(PhilatelicItemViewModel item)
         {
-            var a = item;
+            var userIdentity = GetUserIdentity();
 
-            return RedirectToAction("index");
+            var philatelicItem = new PhilatelicItem {
+                Id = Guid.NewGuid(),
+                CatalogueReference = new CatalogueReference {
+                    Catalogue = (CataloguesInUse)Enum.Parse(typeof(CataloguesInUse), item.Catalogue),
+                    Area = item.Area,
+                    Number = item.Number
+                },
+                Year = item.Year,
+                Description = item.Description,
+                Paid = new Price
+                {
+                    Currency = (Currency)Enum.Parse(typeof(Currency), item.Currency),
+                    Figure = item.Price
+                },
+                Acquired = DateTime.Parse(item.Acquired),
+                Conditions = (Conditions)Enum.Parse(typeof(Conditions), item.Condition),
+                Scans = new Scans()
+            };
+
+            await repository.AddPhilatelicItem(userIdentity, item.CollectionId, philatelicItem);
+
+            return  RedirectToAction("collection", new { id = item.CollectionId } );
         }
 
+        private UserIdentity GetUserIdentity()
+        {
+            return new UserIdentity { Id = userManager.GetUserName(HttpContext.User) };
+        }
 
     }
 }

@@ -9,6 +9,18 @@ namespace ProjectSazan.Persistence.InMemory
 {
 	public class PhilatelicCollectionRepository : IPhilatelicCollectionRepository
 	{
+        public Task AddPhilatelicItem(UserIdentity userIdentity, Guid collectionId, PhilatelicItem philatelicItem)
+        {
+            return Task.Run(() => {
+                if(InMemoryStore.CollectorColletions[userIdentity.Id].SingleOrDefault(collId => collId == collectionId) == null)
+                {
+                    throw new Exception("This is not one of the collector's collections");
+                }
+
+                InMemoryStore.PhilatelicCollections[collectionId].Items.Add(philatelicItem);
+            });
+        }
+
         public Task CreateCollectionAsync(UserIdentity userIdentity, string newCollection)
         {
             var collection = new PhilatelicCollection { Id = Guid.NewGuid(), CollectorId = userIdentity.Id, Title = newCollection }; 
