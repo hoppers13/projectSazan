@@ -145,7 +145,10 @@
 
             //$('#AcquiredDatePicker').datetimepicker();
             $('#AcquiredDatePicker').datetimepicker(
-                {locale: 'en-gb'}
+                {
+                    locale: 'en-gb',
+                    format: "DD/MM/YYYY"
+                }
             );
 
 			function appModalReplaceItem(item) {

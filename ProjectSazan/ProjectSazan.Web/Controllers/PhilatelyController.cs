@@ -8,6 +8,7 @@ using ProjectSazan.Domain;
 using System;
 using ProjectSazan.Web.Models.PhilatelyViewModels;
 using ProjectSazan.Domain.Philately;
+using System.Globalization;
 
 namespace ProjectSazan.Web.Controllers
 {
@@ -57,6 +58,13 @@ namespace ProjectSazan.Web.Controllers
         {
             var userIdentity = GetUserIdentity();
 
+            var thisCulture = new CultureInfo("en-GB");
+            DateTime.TryParseExact(item.Acquired,
+                                    "dd/MM/yyyy",
+                                    thisCulture,
+                                    DateTimeStyles.None,
+                                    out DateTime dateAcquired);
+
             var philatelicItem = new PhilatelicItem {
                 Id = Guid.NewGuid(),
                 CatalogueReference = new CatalogueReference {
@@ -71,7 +79,7 @@ namespace ProjectSazan.Web.Controllers
                     Currency = (Currency)Enum.Parse(typeof(Currency), item.Currency),
                     Figure = item.Price
                 },
-                Acquired = DateTime.Parse(item.Acquired),
+                Acquired = dateAcquired == DateTime.MinValue ? DateTime.Now.Date : dateAcquired.Date,
                 Conditions = (Conditions)Enum.Parse(typeof(Conditions), item.Condition),
                 Scans = new Scans()
             };
