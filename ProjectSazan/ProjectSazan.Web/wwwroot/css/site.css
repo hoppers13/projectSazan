@@ -58,7 +58,12 @@
     }
 }
 
-.scan-box{
+#philatelic-item-form{
+    margin-top: 1em;
+} 
+
+
+.scan-box {
     margin: 1em .7em;
     padding: .2em;
     border: 1px solid #0d1a67;

@@ -5,6 +5,7 @@ namespace ProjectSazan.Web.Models.PhilatelyViewModels
 {
     public class PhilatelicItemViewModel
     {
+        public Guid CollectionId { get; set; }
         public string Catalogue { get; set; }
         [Required]
         public string Area { get; set; }
@@ -15,6 +16,6 @@ namespace ProjectSazan.Web.Models.PhilatelyViewModels
         public string Condition { get; set; }
         public decimal Price { get; set; }
         public string Currency { get; set; }
-        public DateTime Acquired { get; set; } 
+        public string Acquired { get; set; } 
     }
 }
