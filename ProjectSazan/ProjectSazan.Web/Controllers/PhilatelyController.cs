@@ -9,6 +9,8 @@ using System;
 using ProjectSazan.Web.Models.PhilatelyViewModels;
 using ProjectSazan.Domain.Philately;
 using System.Globalization;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 
 namespace ProjectSazan.Web.Controllers
 {
@@ -54,7 +56,7 @@ namespace ProjectSazan.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddItem(PhilatelicItemViewModel item)
+        public async Task<IActionResult> AddItem(PhilatelicItemViewModel item, List<IFormFile> scans)
         {
             var userIdentity = GetUserIdentity();
 
