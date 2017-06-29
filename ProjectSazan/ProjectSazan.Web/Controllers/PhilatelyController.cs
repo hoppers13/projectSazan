@@ -11,19 +11,23 @@ using ProjectSazan.Domain.Philately;
 using System.Globalization;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
 
 namespace ProjectSazan.Web.Controllers
 {
 	[Authorize]
     public class PhilatelyController : Controller
     {
-		IPhilatelicCollectionRepository repository;
+        IHostingEnvironment hostingEnvironment;
+        IPhilatelicCollectionRepository repository;
 		UserManager<ApplicationUser> userManager;
 
 		public PhilatelyController(
-			 UserManager<ApplicationUser> userManager,
-			 IPhilatelicCollectionRepository repository)
+            IHostingEnvironment hostingEnvironment,
+			UserManager<ApplicationUser> userManager,
+			IPhilatelicCollectionRepository repository)
 		{
+            this.hostingEnvironment = hostingEnvironment;
 			this.userManager = userManager;
 			this.repository = repository;
 		}
@@ -86,6 +90,18 @@ namespace ProjectSazan.Web.Controllers
                 Scans = new Scans()
             };
 
+            // handle uploaded files
+            foreach(var scan in scans)
+            {
+                if(scan.Length > 0)
+                {
+
+                    var stream = System.IO.File.Create( $"{hostingEnvironment.WebRootPath}\\images\\scans\\{scan.FileName}");
+                    await scan.CopyToAsync(stream);
+                    philatelicItem.Scans.Add(new Scan { Image = $"/images/scans/{scan.FileName}" });
+                }
+            }
+            
             await repository.AddPhilatelicItem(userIdentity, item.CollectionId, philatelicItem);
 
             return  RedirectToAction("collection", new { id = item.CollectionId } );
