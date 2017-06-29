@@ -12,6 +12,7 @@ using System.Globalization;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace ProjectSazan.Web.Controllers
 {
@@ -95,10 +96,13 @@ namespace ProjectSazan.Web.Controllers
             {
                 if(scan.Length > 0)
                 {
+                    var filename = $"{Guid.NewGuid()}.jpg"; //do not always assume it's a jpg
 
-                    var stream = System.IO.File.Create( $"{hostingEnvironment.WebRootPath}\\images\\scans\\{scan.FileName}");
-                    await scan.CopyToAsync(stream);
-                    philatelicItem.Scans.Add(new Scan { Image = $"/images/scans/{scan.FileName}" });
+                    using(var stream = new FileStream($"{hostingEnvironment.WebRootPath}\\images\\scans\\{filename}", FileMode.Create))
+                    {
+                        await scan.CopyToAsync(stream);
+                        philatelicItem.Scans.Add(new Scan { Image = $"/images/scans/{filename}", Caption = scan.FileName });
+                    }                    
                 }
             }
             
