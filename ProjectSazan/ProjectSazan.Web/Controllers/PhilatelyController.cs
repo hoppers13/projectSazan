@@ -55,7 +55,7 @@ namespace ProjectSazan.Web.Controllers
         {
             var userIdentity = GetUserIdentity();
 
-            await repository.CreateCollectionAsync(userIdentity, coll.NewCollection);
+            await repository.CreateCollectionAsync(userIdentity, coll.Title);
 
             return RedirectToAction("index");
         }
@@ -111,10 +111,15 @@ namespace ProjectSazan.Web.Controllers
             return  RedirectToAction("collection", new { id = item.CollectionId } );
         }
 
+        [HttpPost]
+        public IActionResult Quote(Guid collectionId, IEnumerable<Guid> quotes)        
+        {
+            return RedirectToAction("index");
+        }
+
         private UserIdentity GetUserIdentity()
         {
             return new UserIdentity { Id = userManager.GetUserName(HttpContext.User) };
         }
-
     }
 }

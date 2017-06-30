@@ -2,6 +2,6 @@
 {
     public class AddCollection
     {
-        public string NewCollection { get; set; }
+        public string Title { get; set; }
     }
 }

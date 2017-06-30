@@ -60,45 +60,49 @@
     @Html.Partial("_addPhilatelicItem", new PhilatelicItemViewModel { CollectionId = Model.Id})
 </div>
 <hr />
-<table id="collection-items" class="table table-striped">
-    <thead>
-        <tr>
-            <th class="col-md-7"></th>
-            <th class="col-md-2">Acquired</th>
-            <th class="col-md-1">Paid</th>
-            <th class="col-md-2">Add to quote</th>
+<form asp-controller="philately" asp-action="quote" enctype="multipart/form-data" method="post">
+    <input type="hidden" name="collectionId" value="@Model.Id" />
+    <table id="collection-items" class="table table-striped">
+        <thead>
+            <tr>
+                <th class="col-md-7"></th>
+                <th class="col-md-2">Acquired</th>
+                <th class="col-md-1">Paid</th>
+                <th class="col-md-2 text-center">
+                    <button type="submit" class="btn btn-primary">Ask for a quote</button>                    
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="item in items">
+                <td class="col-md-7">
+                    <div>
+                        <a data-toggle="collapse" :data-target="item.TargetId" href="#">
+                            {{item.Year}},{{item.Area}} {{item.Description}} ({{item.Catalogue}} {{item.Number}})
+                        </a>
+                    </div>
+                    <div :id="item.Id" class="collapse">
+                        <template v-if="item.Scans.length > 0">
+                            <div v-for="scan in item.Scans" class="float-left scan-box">
+                                <a data-toggle="modal" data-target="#dispaly-scans" href="#">
+                                    <figure>
+                                        <img :src="scan.Image" :alt="scan.Caption" class="scan-image" />
+                                        <figcaption>{{scan.Caption}}</figcaption>
+                                    </figure>
+                                </a>
+                            </div>
+                        </template>
+                        <h5 class="info" v-else> There are no scans yet</h5>
+                    </div>
+                </td>
+                <td class="col-md-2">{{item.Acquired}}</td>
+                <td class="col-md-1">{{item.Price}}</td>
+                <td class="col-md-2 text-center"><input type="checkbox" name="quotes[]" class="quotebox" :value="item.Id" /></td>
 
-        </tr>
-    </thead>
-    <tbody>
-        <tr v-for="item in items">
-            <td class="col-md-7">
-                <div>
-                    <a data-toggle="collapse" :data-target="item.TargetId" href="#">
-                        {{item.Year}},{{item.Area}} {{item.Description}} ({{item.Catalogue}} {{item.Number}})
-                    </a>
-                </div>
-                <div :id="item.Id" class="collapse">
-                    <template v-if="item.Scans.length > 0">
-                        <div v-for="scan in item.Scans" class="float-left scan-box">
-                            <a data-toggle="modal" data-target="#dispaly-scans" href="#">
-                                <figure>
-                                    <img :src="scan.Image" :alt="scan.Caption" class="scan-image" />
-                                    <figcaption>{{scan.Caption}}</figcaption>
-                                </figure>
-                            </a>
-                        </div>
-                    </template>
-                    <h5 class="info" v-else> There are no scans yet</h5>
-                </div>
-            </td>
-            <td class="col-md-2">{{item.Acquired}}</td>
-            <td class="col-md-1">{{item.Price}}</td>
-            <td class="col-md-2"><input type="checkbox" /></td>
-        </tr>
-    </tbody>
-</table>
-
+            </tr>
+        </tbody>
+    </table>
+</form>
 @section Scripts{
     <script src="https://unpkg.com/vue"></script>
     
@@ -136,14 +140,13 @@
                 el: '#dispaly-scans',
 				data: modalCarousel
 			})
-
+            
 			$('div.scan-box').click(function () {
 				var selectedItemId = $(this).parent().attr('id');
 				var selectedItem = $.grep(collectionItems, function (e) { return e.Id == selectedItemId})[0];
 				appModalReplaceItem(selectedItem);
 			});
 
-            //$('#AcquiredDatePicker').datetimepicker();
             $('#AcquiredDatePicker').datetimepicker(
                 {
                     locale: 'en-gb',
