@@ -20,17 +20,20 @@ namespace ProjectSazan.Web.Controllers
     public class PhilatelyController : Controller
     {
         IHostingEnvironment hostingEnvironment;
-        IPhilatelicCollectionRepository repository;
-		UserManager<ApplicationUser> userManager;
+        IPhilatelicCollectionRepository collectionRepository;
+        IQuoteRepository quoteRepository;
+        UserManager<ApplicationUser> userManager;
 
 		public PhilatelyController(
             IHostingEnvironment hostingEnvironment,
 			UserManager<ApplicationUser> userManager,
-			IPhilatelicCollectionRepository repository)
+			IPhilatelicCollectionRepository collectionRepository,
+            IQuoteRepository quoteRepository )
 		{
             this.hostingEnvironment = hostingEnvironment;
 			this.userManager = userManager;
-			this.repository = repository;
+			this.collectionRepository = collectionRepository;
+            this.quoteRepository = quoteRepository;
 		}
 
 		[HttpGet]
@@ -38,14 +41,14 @@ namespace ProjectSazan.Web.Controllers
         {
 			var userIdentity = GetUserIdentity();
 
-			var model = await repository.GetCollectionNamesAsync(userIdentity);
+			var model = await collectionRepository.GetCollectionNamesAsync(userIdentity);
 
             return View(model);
         }
 
         public async Task<IActionResult> Collection(Guid id)
         {
-			var model = await repository.GetCollectionAsync(id);
+			var model = await collectionRepository.GetCollectionAsync(id);
 
             return View(model);
         }
@@ -55,7 +58,7 @@ namespace ProjectSazan.Web.Controllers
         {
             var userIdentity = GetUserIdentity();
 
-            await repository.CreateCollectionAsync(userIdentity, coll.Title);
+            await collectionRepository.CreateCollectionAsync(userIdentity, coll.Title);
 
             return RedirectToAction("index");
         }
@@ -106,15 +109,32 @@ namespace ProjectSazan.Web.Controllers
                 }
             }
             
-            await repository.AddPhilatelicItem(userIdentity, item.CollectionId, philatelicItem);
+            await collectionRepository.AddPhilatelicItemAsync(userIdentity, item.CollectionId, philatelicItem);
 
             return  RedirectToAction("collection", new { id = item.CollectionId } );
         }
 
         [HttpPost]
-        public IActionResult Quote(Guid collectionId, IEnumerable<Guid> quotes)        
+        public async Task<IActionResult> Quote(Guid collectionId, IEnumerable<Guid> items)
         {
-            return RedirectToAction("index");
+            var quote = new Quote
+            {
+                Id = Guid.NewGuid(),
+                Collector = GetUserIdentity(),
+                ItemsToInsure = items
+            };
+
+            await quoteRepository.AddIncompleteQuote(quote);
+
+            var model = new CompleteQuoteRequest
+            {
+                Collector = quote.Collector,
+                Items = await collectionRepository.GetPhilatelicItemsAsync(quote.Collector, quote.ItemsToInsure),
+                AllAvailableImsurers = await quoteRepository.GetAllInsurersAsync()                
+            };
+
+
+            return View(model);
         }
 
         private UserIdentity GetUserIdentity()

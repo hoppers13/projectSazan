@@ -71,5 +71,25 @@ namespace ProjectSazan.Persistence.InMemory.SampleData
 					};
 			}
 		}		
+
+        internal static IEnumerable<Insurer> Insurers
+        {
+            get
+            {
+                return new List<Insurer>
+                {
+                    new Insurer
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = "Acme insurers ltd."
+                    },
+                    new Insurer
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = "Best stamp insurance"
+                    }
+                };
+            }
+        }
 	}
 }

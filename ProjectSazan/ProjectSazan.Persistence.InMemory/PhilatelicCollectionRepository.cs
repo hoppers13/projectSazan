@@ -9,7 +9,7 @@ namespace ProjectSazan.Persistence.InMemory
 {
 	public class PhilatelicCollectionRepository : IPhilatelicCollectionRepository
 	{
-        public Task AddPhilatelicItem(UserIdentity userIdentity, Guid collectionId, PhilatelicItem philatelicItem)
+        public Task AddPhilatelicItemAsync(UserIdentity userIdentity, Guid collectionId, PhilatelicItem philatelicItem)
         {
             return Task.Run(() => {
                 if(InMemoryStore.CollectorColletions[userIdentity.Id].SingleOrDefault(collId => collId == collectionId) == null)
@@ -50,5 +50,22 @@ namespace ProjectSazan.Persistence.InMemory
 			return Task.Run(() => InMemoryStore.CollectorColletions[collectorId.Id]
 										.Select(id => InMemoryStore.PhilatelicCollections[id]) as IEnumerable<ICollectableCollection>);			
 		}
-	}
+
+        public Task<IEnumerable<PhilatelicItem>> GetPhilatelicItemsAsync(UserIdentity collector, IEnumerable<Guid> ids)
+        {
+            return Task.Run(() =>
+            {
+                List<PhilatelicItem> result = new List<PhilatelicItem>();
+                var collections = InMemoryStore.CollectorColletions[collector.Id].Select(collectionId =>
+                                                                InMemoryStore.PhilatelicCollections[collectionId]);
+                foreach (var collection in collections)
+                {
+                    if (collection.Items == null) continue;
+                    result.AddRange(collection.Items.Where(item => ids.Contains(item.Id)));
+                }
+
+                return result as IEnumerable<PhilatelicItem>;
+            });            
+        }        
+    }
 }

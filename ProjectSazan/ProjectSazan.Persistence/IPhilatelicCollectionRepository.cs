@@ -11,6 +11,7 @@ namespace ProjectSazan.Persistence
 		Task<IEnumerable<ICollectableCollection>> GetCollectionNamesAsync(UserIdentity collectorId);
         Task CreateCollectionAsync(UserIdentity userIdentity, string newCollection);
 		Task<IPhilatelicCollection> GetCollectionAsync(Guid id);
-        Task AddPhilatelicItem(UserIdentity userIdentity, Guid collectionId, PhilatelicItem philatelicItem);
+        Task AddPhilatelicItemAsync(UserIdentity userIdentity, Guid collectionId, PhilatelicItem philatelicItem);
+        Task<IEnumerable<PhilatelicItem>> GetPhilatelicItemsAsync(UserIdentity collector, IEnumerable<Guid> itemsToInsure);
     }
 }
