@@ -153,16 +153,16 @@
 
 .insurer-box {
 	width: 12em;
-	height: 6em;
+	height: 7em;
 	border: 1px solid #222482;
 	border-radius: 6px;
 	padding: 0.4em;
-	margin: 1em;
+	margin: .4em;
 	float: left;
 }
 
 .select-insurer {
-	padding-left: 1.5em;
+	padding-left: 0.1em;
 	margin-bottom: 0.5em;
 }
 

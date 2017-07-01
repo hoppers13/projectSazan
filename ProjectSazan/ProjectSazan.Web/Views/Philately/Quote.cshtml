@@ -43,7 +43,12 @@
 			<h4>Choose the insurers you want to ask a quote to</h4>
 			<div v-for="insurer in insurers" :data-insurer-id="insurer.id" class="insurer-box">
 				<div class="row">
-					<div class="select-insurer"><input type="checkbox" :value="insurer.id" /></div>
+					<div class="select-insurer checkbox">
+						<label>
+							<input type="checkbox" :value="insurer.id" />
+							<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+						</label>						
+					</div>
 					<div class="text-center"><img :src="insurer.logo" :alt="insurer.name" /></div>
 				</div>
 			</div>
