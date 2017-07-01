@@ -1,99 +1,172 @@
 ﻿body {
-    padding-top: 50px;
-    padding-bottom: 20px;
+	padding-top: 50px;
+	padding-bottom: 20px;
 }
 
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {
-    padding-left: 15px;
-    padding-right: 15px;
+	padding-left: 15px;
+	padding-right: 15px;
 }
 
-.float-left{
-    float:left;
+.float-left {
+	float: left;
 }
 
 .info {
-    font-size: larger;
-    color: #0d1a67;
+	font-size: larger;
+	color: #0d1a67;
 }
 
 .warning {
-    color:red;
-    font-size:smaller;
-    font-weight:bold;
+	color: red;
+	font-size: smaller;
+	font-weight: bold;
 }
 
 
 /* Carousel */
 .carousel-caption p {
-    font-size: 20px;
-    line-height: 1.4;
+	font-size: 20px;
+	line-height: 1.4;
 }
 
 /* buttons and links extension to use brackets: [ click me ] */
 .btn-bracketed::before {
-    display: inline-block;
-    content: "[";
-    padding-right: 0.5em;
+	display: inline-block;
+	content: "[";
+	padding-right: 0.5em;
 }
 
 .btn-bracketed::after {
-    display: inline-block;
-    content: "]";
-    padding-left: 0.5em;
+	display: inline-block;
+	content: "]";
+	padding-left: 0.5em;
 }
 
 /* Make .svg files in the carousel display properly in older browsers */
 .carousel-inner .item img[src$=".svg"] {
-    width: 100%;
+	width: 100%;
 }
 
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
-    /* Hide captions */
-    .carousel-caption {
-        display: none;
-    }
+	/* Hide captions */
+	.carousel-caption {
+		display: none;
+	}
 }
 
+/* cool checkbox*/
+.checkbox label:after,
+.radio label:after {
+	content: '';
+	display: table;
+	clear: both;
+}
+
+.checkbox .cr,
+.radio .cr {
+	position: relative;
+	display: inline-block;
+	border: 1px solid #a9a9a9;
+	border-radius: .25em;
+	width: 1.3em;
+	height: 1.3em;
+	float: left;
+	margin-right: .5em;
+}
+
+.radio .cr {
+	border-radius: 50%;
+}
+
+.checkbox .cr .cr-icon,
+.radio .cr .cr-icon {
+	position: absolute;
+	font-size: .8em;
+	line-height: 0;
+	top: 50%;
+	left: 20%;
+}
+
+.radio .cr .cr-icon {
+	margin-left: 0.04em;
+}
+
+.checkbox label input[type="checkbox"],
+.radio label input[type="radio"] {
+	display: none;
+}
+
+.checkbox label input[type="checkbox"] + .cr > .cr-icon,
+.radio label input[type="radio"] + .cr > .cr-icon {
+	transform: scale(3) rotateZ(-20deg);
+	opacity: 0;
+	transition: all .3s ease-in;
+}
+
+.checkbox label input[type="checkbox"]:checked + .cr > .cr-icon,
+.radio label input[type="radio"]:checked + .cr > .cr-icon {
+	transform: scale(1) rotateZ(0deg);
+	opacity: 1;
+}
+
+.checkbox label input[type="checkbox"]:disabled + .cr,
+.radio label input[type="radio"]:disabled + .cr {
+	opacity: .5;
+}
+
+
+
+
 /* philatelic collection */
-#philatelic-item-form{
-    margin-top: 1em;
-} 
+#philatelic-item-form {
+	margin-top: 1em;
+}
 
 
 .scan-box {
-    margin: 1em .7em;
-    padding: .2em;
-    border: 1px solid #0d1a67;
-    border-radius: 6px;
+	margin: 1em .7em;
+	padding: .2em;
+	border: 1px solid #0d1a67;
+	border-radius: 6px;
 }
 
-.scan-image{
-    max-height:100px;
+.scan-image {
+	max-height: 100px;
 	display: block;
 	margin: 0 auto;
 }
 
 /* quote (philately) */
-.insurer-box{
-    width: 12em;
-    height: 5.5em;
-    border: 1px solid #222482;
-    border-radius: 6px;
-    padding: 0.4em;
-    margin: 1em;
-    float:left;
+#items-to-insure {
+	padding: 0;
+	list-style-type: none;
 }
 
-.select-insurer{
-    padding-left: 1.5em;
-    margin-bottom: 0.5em;
+#items-to-insure li{
+	background-color: #f9f9f9;
+	margin-bottom: 0.15em;
+}
+
+.insurer-box {
+	width: 12em;
+	height: 6em;
+	border: 1px solid #222482;
+	border-radius: 6px;
+	padding: 0.4em;
+	margin: 1em;
+	float: left;
+}
+
+.select-insurer {
+	padding-left: 1.5em;
+	margin-bottom: 0.5em;
 }
 
 .insurer-box img {
-    max-width: 10em;
-    max-height: 4em;
+	max-width: 10em;
+	max-height: 4em;
 }

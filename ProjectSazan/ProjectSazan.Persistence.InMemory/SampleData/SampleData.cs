@@ -81,15 +81,22 @@ namespace ProjectSazan.Persistence.InMemory.SampleData
                     new Insurer
                     {
                         Id = Guid.NewGuid(),
-                        Name = "Acme insurers ltd."
-                    },
+                        Name = "Lark",
+						Logo = "/images/insurers/lark.png"
+					},
                     new Insurer
                     {
                         Id = Guid.NewGuid(),
                         Name = "Highworth Insurance",
                         Logo = "/images/insurers/highworth.png"
-                    }
-                };
+                    },
+					new Insurer
+					{
+						Id = Guid.NewGuid(),
+						Name = "Assetsure",
+						Logo = "/images/insurers/assetsure.png"
+					}
+				};
             }
         }
 	}

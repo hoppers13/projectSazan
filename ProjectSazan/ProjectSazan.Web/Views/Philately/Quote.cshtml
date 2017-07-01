@@ -3,43 +3,57 @@
 @model CompleteQuoteRequest
 
 
-@{
-    ViewData["Title"] = "Finalise quote";
 
-    var items = JsonConvert.SerializeObject(Model.Items.Select(item => new { id = item.Id, description = item.ToString() }));
-    var insurers = JsonConvert.SerializeObject(Model.AllAvailableImsurers
-        .Select(insurer => new {
-            id = insurer.Id,
-            name = insurer.Name,
-            logo = insurer.Logo
-        }));
+
+@{
+	ViewData["Title"] = "Finalise quote";
+
+	var items = JsonConvert.SerializeObject(Model.Items.Select(item => new { id = item.Id, description = item.ToString() }));
+	var insurers = JsonConvert.SerializeObject(Model.AllAvailableImsurers
+		.Select(insurer => new
+		{
+			id = insurer.Id,
+			name = insurer.Name,
+			logo = insurer.Logo
+		}));
 
 }
 
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+
+<h3>Finalise quote request</h3>
 <hr />
 <div id="app">
-    <div class="row">
-        <div class="col-md-6">
-            <h4>Finalise Quote</h4>
-            <ol>
-                <li v-for="item in items" :id="item.id">{{item.description}}</li>
-            </ol>
-        </div>
-        <div class="col-md-6">
-            <h4>Choose the insurers you want to ask a quote to</h4>
-            <div v-for="insurer in insurers" :data-insurer-id="insurer.id" class="insurer-box">
-                <div class="row">
-                    <div class="select-insurer"><input type="checkbox" :value="insurer.id" /></div>
-                    <div class="text-center"><img  :src="insurer.logo" :alt="insurer.name"/></div>                    
-                </div>
-            </div>
-        </div>
-    </div>    
+	<div class="row">
+		<div class="col-md-6">
+			<h4>Double check the items you want to insure</h4>
+			<ul id="items-to-insure">
+				<li v-for="item in items" :id="item.id">
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" checked name="items[]" :value="item.id">
+							<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+							{{item.description}}
+						</label>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div class="col-md-6">
+			<h4>Choose the insurers you want to ask a quote to</h4>
+			<div v-for="insurer in insurers" :data-insurer-id="insurer.id" class="insurer-box">
+				<div class="row">
+					<div class="select-insurer"><input type="checkbox" :value="insurer.id" /></div>
+					<div class="text-center"><img :src="insurer.logo" :alt="insurer.name" /></div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 @section Scripts{
-    <script src="https://unpkg.com/vue"></script>
-    <script>
+	<script src="https://unpkg.com/vue"></script>
+	<script>
 
         var itemsToQuote = @Html.Raw(items);
         var insurers = @Html.Raw(insurers);
@@ -52,6 +66,6 @@
             }
         });
 
-    </script>
-    	    
+	</script>
+
 }
