@@ -86,7 +86,8 @@ namespace ProjectSazan.Persistence.InMemory.SampleData
                     new Insurer
                     {
                         Id = Guid.NewGuid(),
-                        Name = "Best stamp insurance"
+                        Name = "Highworth Insurance",
+                        Logo = "/images/insurers/highworth.png"
                     }
                 };
             }

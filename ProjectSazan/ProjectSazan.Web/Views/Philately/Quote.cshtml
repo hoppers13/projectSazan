@@ -7,7 +7,12 @@
     ViewData["Title"] = "Finalise quote";
 
     var items = JsonConvert.SerializeObject(Model.Items.Select(item => new { id = item.Id, description = item.ToString() }));
-    var insurers = JsonConvert.SerializeObject(Model.AllAvailableImsurers.Select(insurer => new { id = insurer.Id, name = insurer.Name}));
+    var insurers = JsonConvert.SerializeObject(Model.AllAvailableImsurers
+        .Select(insurer => new {
+            id = insurer.Id,
+            name = insurer.Name,
+            logo = insurer.Logo
+        }));
 
 }
 
@@ -24,8 +29,8 @@
             <h4>Choose the insurers you want to ask a quote to</h4>
             <div v-for="insurer in insurers" :data-insurer-id="insurer.id" class="insurer-box">
                 <div class="row">
-                    <div class="col-md-1 right"><input type="checkbox" :value="insurer.id" /></div>
-                    <div class="col-md-1">{{insurer.name}}</div>                    
+                    <div class="select-insurer"><input type="checkbox" :value="insurer.id" /></div>
+                    <div class="text-center"><img  :src="insurer.logo" :alt="insurer.name"/></div>                    
                 </div>
             </div>
         </div>
