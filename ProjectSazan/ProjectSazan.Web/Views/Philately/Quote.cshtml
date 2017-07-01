@@ -1,7 +1,52 @@
+@using Newtonsoft.Json
+@using ProjectSazan.Web.Models.PhilatelyViewModels
+@model CompleteQuoteRequest
+
 
 @{
-    ViewData["Title"] = "Quote";
+    ViewData["Title"] = "Finalise quote";
+
+    var items = JsonConvert.SerializeObject(Model.Items.Select(item => new { id = item.Id, description = item.ToString() }));
+    var insurers = JsonConvert.SerializeObject(Model.AllAvailableImsurers.Select(insurer => new { id = insurer.Id, name = insurer.Name}));
+
 }
 
-<h2>Quote</h2>
+<hr />
+<div id="app">
+    <div class="row">
+        <div class="col-md-6">
+            <h4>Finalise Quote</h4>
+            <ol>
+                <li v-for="item in items" :id="item.id">{{item.description}}</li>
+            </ol>
+        </div>
+        <div class="col-md-6">
+            <h4>Choose the insurers you want to ask a quote to</h4>
+            <div v-for="insurer in insurers" :data-insurer-id="insurer.id" class="insurer-box">
+                <div class="row">
+                    <div class="col-md-1 right"><input type="checkbox" :value="insurer.id" /></div>
+                    <div class="col-md-1">{{insurer.name}}</div>                    
+                </div>
+            </div>
+        </div>
+    </div>    
+</div>
 
+@section Scripts{
+    <script src="https://unpkg.com/vue"></script>
+    <script>
+
+        var itemsToQuote = @Html.Raw(items);
+        var insurers = @Html.Raw(insurers);
+
+        var app = new Vue({
+            el: '#app',
+            data: {
+                items: itemsToQuote,
+                insurers: insurers
+            }
+        });
+
+    </script>
+    	    
+}

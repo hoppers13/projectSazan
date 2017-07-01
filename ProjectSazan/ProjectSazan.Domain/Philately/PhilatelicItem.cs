@@ -15,7 +15,10 @@ namespace ProjectSazan.Domain.Philately
         public DateTime Acquired { get; set; }
 		public Price Paid { get; set; }
 
-
+        public override string ToString()
+        {
+            return $"{Year}, {CatalogueReference.Area} {Description} ({new CatalogueAbbreviations()[CatalogueReference.Catalogue]} {CatalogueReference.Number})";
+        }
         
         //TODO: unit tests
         public bool IsSameItem(CatalogueReference reference)

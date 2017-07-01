@@ -58,6 +58,7 @@
     }
 }
 
+/* philatelic collection */
 #philatelic-item-form{
     margin-top: 1em;
 } 
@@ -74,4 +75,15 @@
     max-height:100px;
 	display: block;
 	margin: 0 auto;
+}
+
+/* quote (philately) */
+.insurer-box{
+    width: 12em;
+    height: 5em;
+    border: 1px solid #222482;
+    border-radius: 6px;
+    padding: 0.4em;
+    margin: 1em;
+    float:left;
 }
