@@ -14,6 +14,7 @@ using ProjectSazan.Web.Models;
 using ProjectSazan.Web.Services;
 using ProjectSazan.Persistence;
 using ProjectSazan.Persistence.InMemory;
+using ProjectSazan.Web.Persistence.FileSystem;
 
 namespace ProjectSazan.Web
 {
@@ -56,6 +57,7 @@ namespace ProjectSazan.Web
             services.AddTransient<ISmsSender, AuthMessageSender>();
 			services.AddTransient<IPhilatelicCollectionRepository, PhilatelicCollectionRepository>();
 			services.AddTransient<IQuoteRepository, QuoteRepository>();
+			services.AddTransient<IScanRepository, ScanRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

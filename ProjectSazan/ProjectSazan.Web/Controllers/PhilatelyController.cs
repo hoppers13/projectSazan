@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
+using ProjectSazan.Web.Persistence.FileSystem;
 
 namespace ProjectSazan.Web.Controllers
 {
@@ -21,18 +22,21 @@ namespace ProjectSazan.Web.Controllers
     {
         IHostingEnvironment hostingEnvironment;
         IPhilatelicCollectionRepository collectionRepository;
-        IQuoteRepository quoteRepository;
+		IScanRepository scanRepository;
+		IQuoteRepository quoteRepository;
         UserManager<ApplicationUser> userManager;
 
 		public PhilatelyController(
             IHostingEnvironment hostingEnvironment,
 			UserManager<ApplicationUser> userManager,
 			IPhilatelicCollectionRepository collectionRepository,
+			IScanRepository scanRepository,
             IQuoteRepository quoteRepository )
 		{
             this.hostingEnvironment = hostingEnvironment;
 			this.userManager = userManager;
 			this.collectionRepository = collectionRepository;
+			this.scanRepository = scanRepository;
             this.quoteRepository = quoteRepository;
 		}
 
@@ -99,14 +103,17 @@ namespace ProjectSazan.Web.Controllers
             {
                 if(scan.Length > 0)
                 {
-                    var filename = $"{Guid.NewGuid()}.jpg"; //do not always assume it's a jpg
+					var scanPath = await scanRepository.SaveCollectableScan(userIdentity, item.CollectionId, scan);
+					philatelicItem.Scans.Add(new Scan { Image = $"/dataStorage/{scanPath.Path}", Caption = scan.FileName });
 
-                    using(var stream = new FileStream($"{hostingEnvironment.WebRootPath}\\images\\scans\\{filename}", FileMode.Create))
-                    {
-                        await scan.CopyToAsync(stream);
-                        philatelicItem.Scans.Add(new Scan { Image = $"/images/scans/{filename}", Caption = scan.FileName });
-                    }                    
-                }
+					//var filename = $"{Guid.NewGuid()}.jpg"; //do not always assume it's a jpg
+
+					//using(var stream = new FileStream($"{hostingEnvironment.WebRootPath}\\images\\scans\\{filename}", FileMode.Create))
+					//{
+					//    await scan.CopyToAsync(stream);
+					//    philatelicItem.Scans.Add(new Scan { Image = $"/images/scans/{filename}", Caption = scan.FileName });
+					//}                    
+				}
             }
             
             await collectionRepository.AddPhilatelicItemAsync(userIdentity, item.CollectionId, philatelicItem);
