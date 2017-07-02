@@ -18,16 +18,18 @@ namespace ProjectSazan.Web.Persistence.FileSystem
 
 		public async Task<ScanPath> SaveCollectableScan(UserIdentity collector, Guid collectionId, IFormFile scan)
 		{
-			var filename = $"{Guid.NewGuid()}.jpg"; //TODO: do not assume file will be a jpg
-			var scanPath = new ScanPath { Path = $"/{collector.Id}/{collectionId}/scans/{filename}" };
+			var filename = $"{Guid.NewGuid()}.jpg";  //TODO: do not assume file will be a jpg
+			
+			var paths = PersistencePathCreator.CreateCollectableScanPath(collector, collectionId, filename);
+			var scanPath = new ScanPath { Path = paths.PathToPersist };
 
-			var fullPath = $"{webRoot}\\dataStorage\\{collector.Id}\\{collectionId}\\scans";
-			if (!Directory.Exists(fullPath))
+			var directory = $"{webRoot}{paths.DirectoryPath}";
+			if (!Directory.Exists(directory))
 			{
-				Directory.CreateDirectory(fullPath);
+				Directory.CreateDirectory(directory);
 			}
 
-			using (var stream = new FileStream($"{webRoot}\\dataStorage\\{collector.Id}\\{collectionId}\\scans\\{filename}", FileMode.Create))
+			using (var stream = new FileStream($"{webRoot}{paths.FilestreamPath}", FileMode.Create))
 			{
 				await scan.CopyToAsync(stream);
 			};

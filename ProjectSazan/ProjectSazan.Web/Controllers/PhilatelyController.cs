@@ -31,7 +31,7 @@ namespace ProjectSazan.Web.Controllers
 			UserManager<ApplicationUser> userManager,
 			IPhilatelicCollectionRepository collectionRepository,
 			IScanRepository scanRepository,
-            IQuoteRepository quoteRepository )
+			IQuoteRepository quoteRepository )
 		{
             this.hostingEnvironment = hostingEnvironment;
 			this.userManager = userManager;
@@ -62,7 +62,10 @@ namespace ProjectSazan.Web.Controllers
         {
             var userIdentity = GetUserIdentity();
 
-            await collectionRepository.CreateCollectionAsync(userIdentity, coll.Title);
+			var fsRepository = new PhilatelicCollectionRepository(hostingEnvironment);
+
+            // await collectionRepository.CreateCollectionAsync(userIdentity, coll.Title);
+            await fsRepository.CreateCollectionAsync(userIdentity, coll.Title);
 
             return RedirectToAction("index");
         }
@@ -97,22 +100,13 @@ namespace ProjectSazan.Web.Controllers
                 Conditions = (Conditions)Enum.Parse(typeof(Conditions), item.Condition),
                 Scans = new Scans()
             };
-
-            // handle uploaded files
+			
             foreach(var scan in scans)
             {
                 if(scan.Length > 0)
                 {
 					var scanPath = await scanRepository.SaveCollectableScan(userIdentity, item.CollectionId, scan);
-					philatelicItem.Scans.Add(new Scan { Image = $"/dataStorage/{scanPath.Path}", Caption = scan.FileName });
-
-					//var filename = $"{Guid.NewGuid()}.jpg"; //do not always assume it's a jpg
-
-					//using(var stream = new FileStream($"{hostingEnvironment.WebRootPath}\\images\\scans\\{filename}", FileMode.Create))
-					//{
-					//    await scan.CopyToAsync(stream);
-					//    philatelicItem.Scans.Add(new Scan { Image = $"/images/scans/{filename}", Caption = scan.FileName });
-					//}                    
+					philatelicItem.Scans.Add(new Scan { Image = $"/dataStorage/{scanPath.Path}", Caption = scan.FileName });       
 				}
             }
             
