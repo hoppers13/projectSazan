@@ -23,38 +23,43 @@
 
 <h3>Finalise quote request</h3>
 <hr />
-<div id="app">
-	<div class="row">
-		<div class="col-md-6">
-			<h4>Double check the items you want to insure</h4>
-			<ul id="items-to-insure">
-				<li v-for="item in items" :id="item.id">
-					<div class="checkbox">
-						<label>
-							<input type="checkbox" checked name="items[]" :value="item.id">
-							<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
-							{{item.description}}
-						</label>
-					</div>
-				</li>
-			</ul>
-		</div>
-		<div class="col-md-6">
-			<h4>Choose the insurers you want to ask a quote to</h4>
-			<div v-for="insurer in insurers" :data-insurer-id="insurer.id" class="insurer-box">
+<form asp-controller="philately" asp-action="requestquote" method="post">
+	<input type="hidden" name="incompleteQuoteId" value="@Model.QuoteToCompleteId" />
+	<div id="app">
+		<div class="row">
+			<div class="col-md-6">
+				<h4>Double check the items you want to insure</h4>
+				<ul id="items-to-insure">
+					<li v-for="item in items" :id="item.id">
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" checked name="items[]" :value="item.id">
+								<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+								{{item.description}}
+							</label>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="col-md-6">
 				<div class="row">
-					<div class="select-insurer checkbox">
-						<label>
-							<input type="checkbox" :value="insurer.id" />
-							<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
-						</label>						
+					<h4><button type="submit" class="btn btn-primary">Request quote</button> &nbsp; &nbsp; Choose the insurers you want to ask a quote to </h4> 					
+				</div>				
+				<div v-for="insurer in insurers" :data-insurer-id="insurer.id" class="insurer-box">
+					<div class="row">
+						<div class="select-insurer checkbox">
+							<label>
+								<input type="checkbox" name="insurers[]" :value="insurer.id" />
+								<span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+							</label>
+						</div>
+						<div class="text-center"><img :src="insurer.logo" :alt="insurer.name" /></div>
 					</div>
-					<div class="text-center"><img :src="insurer.logo" :alt="insurer.name" /></div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
+</form>
 
 @section Scripts{
 	<script src="https://unpkg.com/vue"></script>

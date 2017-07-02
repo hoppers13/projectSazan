@@ -128,14 +128,20 @@ namespace ProjectSazan.Web.Controllers
 
             var model = new CompleteQuoteRequest
             {
+				QuoteToCompleteId = quote.Id,
                 Collector = quote.Collector,
                 Items = await collectionRepository.GetPhilatelicItemsAsync(quote.Collector, quote.ItemsToInsure),
                 AllAvailableImsurers = await quoteRepository.GetAllInsurersAsync()                
             };
-
-
+			
             return View(model);
         }
+
+		[HttpPost]
+		public async Task<IActionResult> RequestQuote(Guid incompleteQuoteId, IEnumerable<Guid> items, IEnumerable<Guid> insurers)
+		{
+			return View();
+		}
 
         private UserIdentity GetUserIdentity()
         {
