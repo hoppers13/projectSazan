@@ -12,7 +12,6 @@ using System.Globalization;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
-using System.IO;
 using ProjectSazan.Web.Persistence.FileSystem;
 
 namespace ProjectSazan.Web.Controllers
@@ -24,7 +23,8 @@ namespace ProjectSazan.Web.Controllers
         IPhilatelicCollectionRepository collectionRepository;
 		IScanRepository scanRepository;
 		IQuoteRepository quoteRepository;
-        UserManager<ApplicationUser> userManager;
+		PhilatelicCollectionRepository fsRepository;
+		UserManager<ApplicationUser> userManager;
 
 		public PhilatelyController(
             IHostingEnvironment hostingEnvironment,
@@ -38,6 +38,7 @@ namespace ProjectSazan.Web.Controllers
 			this.collectionRepository = collectionRepository;
 			this.scanRepository = scanRepository;
             this.quoteRepository = quoteRepository;
+			fsRepository = new PhilatelicCollectionRepository(hostingEnvironment);
 		}
 
 		[HttpGet]
@@ -45,14 +46,16 @@ namespace ProjectSazan.Web.Controllers
         {
 			var userIdentity = GetUserIdentity();
 
-			var model = await collectionRepository.GetCollectionNamesAsync(userIdentity);
+			// var model = await collectionRepository.GetCollectionNamesAsync(userIdentity);
+			var model = await fsRepository.GetCollectionNamesAsync(userIdentity);
 
             return View(model);
         }
 
         public async Task<IActionResult> Collection(Guid id)
         {
-			var model = await collectionRepository.GetCollectionAsync(id);
+			//var model = await collectionRepository.GetCollectionAsync(GetUserIdentity(), id);
+			var model = await fsRepository.GetCollectionAsync(GetUserIdentity(), id);
 
             return View(model);
         }
@@ -61,9 +64,7 @@ namespace ProjectSazan.Web.Controllers
         public async Task<IActionResult> CreateCollection(AddCollection coll)
         {
             var userIdentity = GetUserIdentity();
-
-			var fsRepository = new PhilatelicCollectionRepository(hostingEnvironment);
-
+					
             // await collectionRepository.CreateCollectionAsync(userIdentity, coll.Title);
             await fsRepository.CreateCollectionAsync(userIdentity, coll.Title);
 
@@ -110,7 +111,8 @@ namespace ProjectSazan.Web.Controllers
 				}
             }
             
-            await collectionRepository.AddPhilatelicItemAsync(userIdentity, item.CollectionId, philatelicItem);
+            //await collectionRepository.AddPhilatelicItemAsync(userIdentity, item.CollectionId, philatelicItem);
+            await fsRepository.AddPhilatelicItemAsync(userIdentity, item.CollectionId, philatelicItem);
 
             return  RedirectToAction("collection", new { id = item.CollectionId } );
         }
@@ -131,7 +133,8 @@ namespace ProjectSazan.Web.Controllers
             {
 				QuoteToCompleteId = quote.Id,
                 Collector = quote.Collector,
-                Items = await collectionRepository.GetPhilatelicItemsAsync(quote.Collector, quote.ItemsToInsure),
+                //Items = await collectionRepository.GetPhilatelicItemsAsync(quote.Collector, quote.ItemsToInsure),
+				Items = await fsRepository.GetPhilatelicItemsAsync(quote.Collector, quote.ItemsToInsure),
                 AllAvailableImsurers = await quoteRepository.GetAllInsurersAsync()                
             };
 			

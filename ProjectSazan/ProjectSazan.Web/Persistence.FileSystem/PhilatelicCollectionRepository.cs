@@ -1,34 +1,35 @@
 ﻿using ProjectSazan.Persistence;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using ProjectSazan.Domain;
 using ProjectSazan.Domain.Philately;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
+using Microsoft.AspNetCore.Identity;
+using ProjectSazan.Web.Models;
 
 namespace ProjectSazan.Web.Persistence.FileSystem
 {
 	public class PhilatelicCollectionRepository : IPhilatelicCollectionRepository
 	{
 		private string webRoot;
-
+		
 		public PhilatelicCollectionRepository(IHostingEnvironment hostingEnvironment)
 		{
-			this.webRoot = hostingEnvironment.WebRootPath;
+			this.webRoot = hostingEnvironment.WebRootPath;			
 		}
 		
 		public Task CreateCollectionAsync(UserIdentity collector, string newCollection)
 		{
-			var collection = new PhilatelicCollection { Id = Guid.NewGuid(), CollectorId = collector.Id, Title = newCollection };
+			var collection = new PhilatelicCollection { Id = Guid.NewGuid(), CollectorId = collector.Id, Title = newCollection, Items = new List<PhilatelicItem>() };
 			var jsonDocument = JsonConvert.SerializeObject(collection);
 
 			var documentName = $"{collection.Id}.json";
 			var paths = PersistencePathCreator.CreateCollectionDocumentPath(collector, collection.Id, documentName);
 
-			var collectionSummaryPath = $"{webRoot}\\dataStorage\\{collector.Id}\\collections.json";
+			var collectionSummaryPath = $"{webRoot}{PersistencePathCreator.GetCollectionSummaryPersistencePath(collector)}";
 
 			var directory = $"{webRoot}{paths.DirectoryPath}";
 
@@ -73,25 +74,90 @@ namespace ProjectSazan.Web.Persistence.FileSystem
 			});			
 		}
 
-
-		public Task AddPhilatelicItemAsync(UserIdentity userIdentity, Guid collectionId, PhilatelicItem philatelicItem)
+		public Task<IEnumerable<ICollectableCollection>> GetCollectionNamesAsync(UserIdentity collector)
 		{
-			throw new NotImplementedException();
+			var path = $"{webRoot}{PersistencePathCreator.GetCollectionSummaryPersistencePath(collector)}";
+
+			return Task.Run(() =>
+			{
+				if (!File.Exists(path)) return (new List<IPhilatelicCollection>() as IEnumerable<ICollectableCollection>);
+				
+				using (var streamReader = new StreamReader(new FileStream(path, FileMode.Open)))
+				{
+					var summary = JsonConvert.DeserializeObject<CollectionsSummary>(streamReader.ReadToEnd());
+					var result = new List<IPhilatelicCollection>();
+
+					foreach(var coll in summary.Collections)
+					{
+						result.Add(new PhilatelicCollection { Id = coll.Id, Title = coll.Title, CollectorId = collector.Id });
+					}
+
+					return result;
+				}
+			});			
 		}
 
-		public Task<IPhilatelicCollection> GetCollectionAsync(Guid id)
-		{
-			throw new NotImplementedException();
+		public Task<IPhilatelicCollection> GetCollectionAsync(UserIdentity collector, Guid collectionId)
+		{			
+			var path = $"{webRoot}{PersistencePathCreator.GetCollectionPersistencePath(collector, collectionId)}";
+
+			return Task.Run(() =>
+			{
+				if (!File.Exists(path)) throw new Exception("could not find required collection");
+
+				using (var streamReader = new StreamReader(new FileStream(path, FileMode.Open)))
+				{
+					return JsonConvert.DeserializeObject<PhilatelicCollection>(streamReader.ReadToEnd()) as IPhilatelicCollection; 
+				}
+			});			
 		}
 
-		public Task<IEnumerable<ICollectableCollection>> GetCollectionNamesAsync(UserIdentity collectorId)
+		public Task AddPhilatelicItemAsync(UserIdentity collector, Guid collectionId, PhilatelicItem philatelicItem)
 		{
-			throw new NotImplementedException();
-		}
+			var path = $"{webRoot}{PersistencePathCreator.GetCollectionPersistencePath(collector, collectionId)}";
 
+			PhilatelicCollection collection;
+
+			return Task.Run(() =>
+			{
+				if (!File.Exists(path)) throw new Exception("could not find required collection");
+
+				using (var streamReader = new StreamReader(new FileStream(path, FileMode.Open)))
+				{
+					collection = JsonConvert.DeserializeObject<PhilatelicCollection>(streamReader.ReadToEnd());
+				}
+
+				collection.Items.Add(philatelicItem);
+
+				using (var streamWriter = new StreamWriter(File.Create(path)))
+				{
+					streamWriter.Write(JsonConvert.SerializeObject(collection));
+				}
+			});
+		}
+		
+		// STILL TO DO
+		
 		public Task<IEnumerable<PhilatelicItem>> GetPhilatelicItemsAsync(UserIdentity collector, IEnumerable<Guid> itemsToInsure)
 		{
-			throw new NotImplementedException();
+			var path = $"{webRoot}{PersistencePathCreator.GetCollectionSummaryPersistencePath(collector)}";
+
+			return Task.Run(() =>
+			{
+				if (!File.Exists(path)) return new List<PhilatelicItem>() as IEnumerable<PhilatelicItem>;
+
+				var result = new List<PhilatelicItem>();
+
+				using (var streamReader = new StreamReader(new FileStream(path, FileMode.Open)))
+				{
+					var summary = JsonConvert.DeserializeObject<CollectionsSummary>(streamReader.ReadToEnd());
+
+
+					
+				};
+
+				return result;
+			});
 		}
 	}
 }
