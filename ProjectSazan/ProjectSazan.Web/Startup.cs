@@ -55,7 +55,7 @@ namespace ProjectSazan.Web
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
-			services.AddTransient<IPhilatelicCollectionRepository, ProjectSazan.Persistence.InMemory.PhilatelicCollectionRepository>();
+			services.AddTransient<IPhilatelicCollectionRepository, Persistence.FileSystem.PhilatelicCollectionRepository>();
 			services.AddTransient<IQuoteRepository, QuoteRepository>();
 			services.AddTransient<IScanRepository, ScanRepository>();
         }
