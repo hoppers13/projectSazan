@@ -107,7 +107,7 @@ namespace ProjectSazan.Web.Controllers
                 if(scan.Length > 0)
                 {
 					var scanPath = await scanRepository.SaveCollectableScan(userIdentity, item.CollectionId, scan);
-					philatelicItem.Scans.Add(new Scan { Image = $"/dataStorage/{scanPath.Path}", Caption = scan.FileName });       
+					philatelicItem.Scans.Add(new Scan { Image = $"/dataStorage{scanPath.Path}", Caption = scan.FileName });       
 				}
             }
             

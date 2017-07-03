@@ -7,8 +7,7 @@ using ProjectSazan.Domain.Philately;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
-using Microsoft.AspNetCore.Identity;
-using ProjectSazan.Web.Models;
+using System.Linq;
 
 namespace ProjectSazan.Web.Persistence.FileSystem
 {
@@ -147,14 +146,17 @@ namespace ProjectSazan.Web.Persistence.FileSystem
 				if (!File.Exists(path)) return new List<PhilatelicItem>() as IEnumerable<PhilatelicItem>;
 
 				var result = new List<PhilatelicItem>();
-
+				CollectionsSummary summary;
 				using (var streamReader = new StreamReader(new FileStream(path, FileMode.Open)))
 				{
-					var summary = JsonConvert.DeserializeObject<CollectionsSummary>(streamReader.ReadToEnd());
-
-
-					
+					summary = JsonConvert.DeserializeObject<CollectionsSummary>(streamReader.ReadToEnd());										
 				};
+
+				foreach (var coll in summary.Collections)
+				{
+					var persistedCollection = GetCollectionAsync(collector, coll.Id).Result;
+					result.AddRange(persistedCollection.Items.Where(i => itemsToInsure.Contains(i.Id)));
+				}
 
 				return result;
 			});
