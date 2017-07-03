@@ -40,8 +40,9 @@ namespace ProjectSazan.Persistence.InMemory
             });            
         }
 
-		public Task<IPhilatelicCollection> GetCollectionAsync(Guid id)
+		public Task<IPhilatelicCollection> GetCollectionAsync(UserIdentity collector, Guid id)
 		{
+			// collector not needed here - given how data are organised in memeory
 			return Task.Run(() =>  InMemoryStore.PhilatelicCollections[id]);
 		}
 
