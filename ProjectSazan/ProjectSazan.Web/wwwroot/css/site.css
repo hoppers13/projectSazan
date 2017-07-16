@@ -121,11 +121,16 @@
 
 
 
-/* philatelic collection */
-#philatelic-item-form {
-	margin-top: 1em;
+/* home page*/
+#take-a-tour{
+    padding: 0.3em 0.6em;
 }
 
+
+/* philatelic collection */
+#philatelic-item-form {
+    margin-top: 1em;
+}
 
 .scan-box {
 	margin: 1em .7em;
