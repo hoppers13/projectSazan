@@ -18,11 +18,14 @@
             TargetId = $"#{item.Id}",
             item.Year,
             item.CatalogueReference.Area,
+            SelectCatalogue = item.CatalogueReference.Catalogue.ToString(),
             Catalogue = abbr[item.CatalogueReference.Catalogue],
             item.CatalogueReference.Number,
+            Conditions = item.Conditions.ToString(),
             item.Description,
             Scans = item.Scans.Select(scan => new { Image = scan.Image, Caption = scan.Caption }),
             Acquired = item.Acquired.ToString("dd MMM yyyy"),
+            Currency = item.Paid.Currency.ToString(),
             Price = $"{symbols[item.Paid.Currency]}{item.Paid.Figure}"
         });
     }
@@ -159,7 +162,20 @@
 
             $('.update-item').click(function () {
                 var selectedItemId = $(this).parent().attr('data-item-id');
-                alert('ready to update item ' + selectedItemId);
+                var selectedItem = $.grep(collectionItems, function (e) { return e.Id == selectedItemId })[0];
+                
+                $('#Catalogue').val(selectedItem.SelectCatalogue);
+                $('#Area').val(selectedItem.Area);
+                $('#Number').val(selectedItem.Number);
+                $('#Year').val(selectedItem.Year);
+                $('#Description').val(selectedItem.Description);
+                $('#Condition').val(selectedItem.Conditions);
+                $('#Acquired').val(selectedItem.Acquired);
+                $('#Price').val(selectedItem.Price);
+                $('#Currency').val(selectedItem.Currency);
+
+
+
             });
 
             $('#AcquiredDatePicker').datetimepicker(
