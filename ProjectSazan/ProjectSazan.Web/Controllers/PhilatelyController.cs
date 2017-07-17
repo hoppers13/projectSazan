@@ -106,7 +106,7 @@ namespace ProjectSazan.Web.Controllers
 				}
             }
             
-            await collectionRepository.AddPhilatelicItemAsync(userIdentity, item.CollectionId, philatelicItem);
+            await collectionRepository.SavePhilatelicItemAsync(userIdentity, item.CollectionId, philatelicItem);
             
             return  RedirectToAction("collection", new { id = item.CollectionId } );
         }

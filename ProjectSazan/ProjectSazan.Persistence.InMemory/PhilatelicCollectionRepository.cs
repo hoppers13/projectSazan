@@ -67,6 +67,11 @@ namespace ProjectSazan.Persistence.InMemory
 
                 return result as IEnumerable<PhilatelicItem>;
             });            
-        }        
+        }
+
+        public Task SavePhilatelicItemAsync(UserIdentity collector, Guid collectionId, PhilatelicItem philatelicItem)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

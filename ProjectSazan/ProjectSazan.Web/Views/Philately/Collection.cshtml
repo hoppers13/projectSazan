@@ -5,34 +5,34 @@
 @model IPhilatelicCollection
 
 @functions{
-			public object GetDisplayItems(IEnumerable<PhilatelicItem> items)
-			{
-				if (items == null) return new List<object>();
+    public object GetDisplayItems(IEnumerable<PhilatelicItem> items)
+    {
+        if (items == null) return new List<object>();
 
-				var abbr = new CatalogueAbbreviations();
-				var symbols = new CurrencySymbols();
+        var abbr = new CatalogueAbbreviations();
+        var symbols = new CurrencySymbols();
 
-				return items.Select(item => new
-				{
-					item.Id,
-					TargetId = $"#{item.Id}",
-					item.Year,
-					item.CatalogueReference.Area,
-					Catalogue = abbr[item.CatalogueReference.Catalogue],
-					item.CatalogueReference.Number,
-					item.Description,
-					Scans = item.Scans.Select(scan => new { Image = scan.Image, Caption = scan.Caption}),
-					Acquired = item.Acquired.ToString("dd MMM yyyy"),
-					Price = $"{symbols[item.Paid.Currency]}{item.Paid.Figure}"
-				});
-			}
-		}
+        return items.Select(item => new
+        {
+            item.Id,
+            TargetId = $"#{item.Id}",
+            item.Year,
+            item.CatalogueReference.Area,
+            Catalogue = abbr[item.CatalogueReference.Catalogue],
+            item.CatalogueReference.Number,
+            item.Description,
+            Scans = item.Scans.Select(scan => new { Image = scan.Image, Caption = scan.Caption }),
+            Acquired = item.Acquired.ToString("dd MMM yyyy"),
+            Price = $"{symbols[item.Paid.Currency]}{item.Paid.Figure}"
+        });
+    }
+}
 
 @{
     ViewData["Title"] = Model.Title;
     var displayItems = GetDisplayItems(Model.Items);
-		var items = JsonConvert.SerializeObject(displayItems);
-	}
+    var items = JsonConvert.SerializeObject(displayItems);
+}
 
 
 <div id="dispaly-scans" class="modal fade" role="dialog">
@@ -57,7 +57,7 @@
     <div class="col-md-12"><a data-toggle="collapse" data-target="#philatelic-item-form" href="#">add item</a></div>
 </div>
 <div id="philatelic-item-form" class="collapse">
-    @Html.Partial("_addPhilatelicItem", new PhilatelicItemViewModel { CollectionId = Model.Id})
+    @Html.Partial("_addPhilatelicItem", new PhilatelicItemViewModel { CollectionId = Model.Id })
 </div>
 <hr />
 <form asp-controller="philately" asp-action="quote" enctype="multipart/form-data" method="post">
@@ -65,7 +65,8 @@
     <table id="collection-items" class="table table-striped">
         <thead>
             <tr>
-                <th class="col-md-7"></th>
+                <th class="col-md-1"></th>
+                <th class="col-md-6"></th>
                 <th class="col-md-2">Acquired</th>
                 <th class="col-md-1">Paid</th>
                 <th class="col-md-2 text-center">
@@ -75,7 +76,16 @@
         </thead>
         <tbody>
             <tr v-for="item in items">
-                <td class="col-md-7">
+                <td class="col-md-1" :data-item-id="item.Id">
+                    <a href="#" title="delete item" class="delete-item">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </a>
+                    &nbsp;
+                    <a href="#" title="update item" class="update-item" data-toggle="collapse" data-target="#philatelic-item-form">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </a>                    
+                </td>
+                <td class="col-md-6">
                     <div>
                         <a data-toggle="collapse" :data-target="item.TargetId" href="#">
                             {{item.Year}},{{item.Area}} {{item.Description}} ({{item.Catalogue}} {{item.Number}})
@@ -105,7 +115,7 @@
 </form>
 @section Scripts{
     <script src="https://unpkg.com/vue"></script>
-    
+
     <link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
     <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
     <script src="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
@@ -123,48 +133,50 @@
 			var app = new Vue({
 				el: '#collection-items',
 			    data: {
-				items: collectionItems
-
+				        items: collectionItems
 					  }
-		});
+		        });
 
-		var modalCarousel = {
-			"Year": 0,
-				"Area": "",
-				"Description": "",
-				"Catalogue": "",
-				"Number": "",
-				"Scans": []
-			};
+		    var modalCarousel = {
+			    "Year": 0,
+				    "Area": "",
+				    "Description": "",
+				    "Catalogue": "",
+				    "Number": "",
+				    "Scans": []
+			    };
 
-	var appModal = new Vue({
-                el: '#dispaly-scans',
-		data: modalCarousel
-			})
-            
+	        var appModal = new Vue({
+                        el: '#dispaly-scans',
+		        data: modalCarousel
+			        })
+
 			$('div.scan-box').click(function () {
-		var selectedItemId = $(this).parent().attr('id');
-		var selectedItem = $.grep(collectionItems, function (e) { return e.Id == selectedItemId})[0];
+	        	var selectedItemId = $(this).parent().attr('id');
+	        	var selectedItem = $.grep(collectionItems, function (e) { return e.Id == selectedItemId})[0];
 				appModalReplaceItem(selectedItem);
 			});
 
+            $('.update-item').click(function () {
+                var selectedItemId = $(this).parent().attr('data-item-id');
+                alert('ready to update item ' + selectedItemId);
+            });
+
             $('#AcquiredDatePicker').datetimepicker(
-
 				{
-		locale: 'en-gb',
+		            locale: 'en-gb',
                     format: "DD/MM/YYYY"
-
 				}
             );
 
 			function appModalReplaceItem(item) {
-		modalCarousel.Year = item.Year;
-		modalCarousel.Area = item.Area;
-		modalCarousel.Description = item.Description;
-		modalCarousel.Catalogue = item.Catalogue;
-		modalCarousel.Number = item.Number;
-		modalCarousel.Scans = item.Scans;
-	}
+		        modalCarousel.Year = item.Year;
+		        modalCarousel.Area = item.Area;
+		        modalCarousel.Description = item.Description;
+		        modalCarousel.Catalogue = item.Catalogue;
+		        modalCarousel.Number = item.Number;
+		        modalCarousel.Scans = item.Scans;
+	        }
         });
 
     </script>

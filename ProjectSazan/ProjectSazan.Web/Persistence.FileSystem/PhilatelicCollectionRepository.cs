@@ -110,33 +110,7 @@ namespace ProjectSazan.Web.Persistence.FileSystem
 				}
 			});			
 		}
-
-		public Task AddPhilatelicItemAsync(UserIdentity collector, Guid collectionId, PhilatelicItem philatelicItem)
-		{
-			var path = $"{webRoot}{PersistencePathCreator.GetCollectionPersistencePath(collector, collectionId)}";
-
-			PhilatelicCollection collection;
-
-			return Task.Run(() =>
-			{
-				if (!File.Exists(path)) throw new Exception("could not find required collection");
-
-				using (var streamReader = new StreamReader(new FileStream(path, FileMode.Open)))
-				{
-					collection = JsonConvert.DeserializeObject<PhilatelicCollection>(streamReader.ReadToEnd());
-				}
-
-				collection.Items.Add(philatelicItem);
-
-				using (var streamWriter = new StreamWriter(File.Create(path)))
-				{
-					streamWriter.Write(JsonConvert.SerializeObject(collection));
-				}
-			});
-		}
-		
-		// STILL TO DO
-		
+        
 		public Task<IEnumerable<PhilatelicItem>> GetPhilatelicItemsAsync(UserIdentity collector, IEnumerable<Guid> itemsToInsure)
 		{
 			var path = $"{webRoot}{PersistencePathCreator.GetCollectionSummaryPersistencePath(collector)}";
@@ -161,5 +135,45 @@ namespace ProjectSazan.Web.Persistence.FileSystem
 				return result;
 			});
 		}
-	}
+
+        public Task SavePhilatelicItemAsync(UserIdentity collector, Guid collectionId, PhilatelicItem philatelicItem)
+        {
+            var path = $"{webRoot}{PersistencePathCreator.GetCollectionPersistencePath(collector, collectionId)}";
+
+            PhilatelicCollection collection;
+
+            return Task.Run(() => {
+
+                if (!File.Exists(path)) throw new Exception("could not find required collection");
+
+                using (var streamReader = new StreamReader(new FileStream(path, FileMode.Open)))
+                {
+                    collection = JsonConvert.DeserializeObject<PhilatelicCollection>(streamReader.ReadToEnd());
+                }
+
+                var item = collection.Items.SingleOrDefault(itm => itm.Id == philatelicItem.Id);
+
+                if(item == null)
+                {
+                    // add new item
+                    collection.Items.Add(philatelicItem);
+                }
+                else
+                {
+                    // update existing item
+                    var index = collection.Items.IndexOf(item);
+                    collection.Items.RemoveAt(index);
+                    collection.Items.Insert(index, philatelicItem);
+
+                    //TODO: update scans.
+                }
+
+                using (var streamWriter = new StreamWriter(File.Create(path)))
+                {
+                    streamWriter.Write(JsonConvert.SerializeObject(collection));
+                }
+
+            });            
+        }
+    }
 }
