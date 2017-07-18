@@ -167,6 +167,13 @@ namespace ProjectSazan.Web.Persistence.FileSystem
                     {
                         philatelicItem.Scans = item.Scans;
                     }
+                    else
+                    {
+                        foreach(var scan in item.Scans)
+                        {
+                            scanRepository.RemoveScan(collector, collectionId, scan.Image);
+                        }
+                    }
 
                     // update existing item
                     var index = collection.Items.IndexOf(item);
