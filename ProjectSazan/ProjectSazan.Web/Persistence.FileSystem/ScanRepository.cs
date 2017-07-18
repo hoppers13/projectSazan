@@ -35,6 +35,20 @@ namespace ProjectSazan.Web.Persistence.FileSystem
 			};
 
 			return scanPath;
-		}		
+		}
+
+		public Task RemoveScan(UserIdentity collector, Guid collectionId, string filename)
+		{
+			var toDelete = $"{webRoot}{filename}";
+
+			return Task.Run(() =>
+			{
+				if (!File.Exists(toDelete)) return;
+
+				File.Delete(toDelete);
+			});
+
+			
+		}
 	}
 }

@@ -16,7 +16,7 @@
         {
             item.Id,
             TargetId = $"#{item.Id}",
-            DeleteMe = $"/philately/remove/{Model.Id}/{item.Id}",
+            DeleteMe = $"/philately/removeItem/{Model.Id}/{item.Id}",
             item.Year,
             item.CatalogueReference.Area,
             SelectCatalogue = item.CatalogueReference.Catalogue.ToString(),

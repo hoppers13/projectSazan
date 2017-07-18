@@ -112,8 +112,12 @@ namespace ProjectSazan.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Remove(Guid collectionId, Guid itemId)
+        public async Task<IActionResult> RemoveItem(Guid collectionId, Guid itemId)
         {
+	        var userIdentity = GetUserIdentity();
+
+	        await collectionRepository.RemovePhilatelicItemAsync(userIdentity, collectionId, itemId);
+
             return RedirectToAction("collection", new { id = collectionId });
         }
 

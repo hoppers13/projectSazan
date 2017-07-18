@@ -73,5 +73,10 @@ namespace ProjectSazan.Persistence.InMemory
         {
             throw new NotImplementedException();
         }
-    }
+
+		public Task RemovePhilatelicItemAsync(UserIdentity collector, Guid collectionId, Guid itemId)
+		{
+			throw new NotImplementedException();
+		}
+	}
 }

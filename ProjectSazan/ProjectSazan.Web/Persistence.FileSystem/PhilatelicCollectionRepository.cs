@@ -13,11 +13,13 @@ namespace ProjectSazan.Web.Persistence.FileSystem
 {
 	public class PhilatelicCollectionRepository : IPhilatelicCollectionRepository
 	{
+		private readonly IScanRepository scanRepository;
 		private string webRoot;
 		
-		public PhilatelicCollectionRepository(IHostingEnvironment hostingEnvironment)
+		public PhilatelicCollectionRepository(IHostingEnvironment hostingEnvironment, IScanRepository scanRepository)
 		{
-			this.webRoot = hostingEnvironment.WebRootPath;			
+			this.scanRepository = scanRepository;
+			this.webRoot = hostingEnvironment.WebRootPath;
 		}
 		
 		public Task CreateCollectionAsync(UserIdentity collector, string newCollection)
@@ -179,5 +181,41 @@ namespace ProjectSazan.Web.Persistence.FileSystem
 
             });            
         }
-    }
+
+		public Task RemovePhilatelicItemAsync(UserIdentity collector, Guid collectionId, Guid itemId)
+		{
+			var path = $"{webRoot}{PersistencePathCreator.GetCollectionPersistencePath(collector, collectionId)}";
+
+			PhilatelicCollection collection;
+
+			return Task.Run(() => {
+
+				if (!File.Exists(path)) throw new Exception("could not find required collection");
+
+				using (var streamReader = new StreamReader(new FileStream(path, FileMode.Open)))
+				{
+					collection = JsonConvert.DeserializeObject<PhilatelicCollection>(streamReader.ReadToEnd());
+				}
+
+				var item = collection.Items.SingleOrDefault(itm => itm.Id == itemId);
+
+				if (item == null) return;
+
+				foreach (var scan in item.Scans)
+				{
+					scanRepository.RemoveScan(collector, collectionId, scan.Image);
+				}
+
+				var index = collection.Items.IndexOf(item);
+				collection.Items.RemoveAt(index);
+
+				using (var streamWriter = new StreamWriter(File.Create(path)))
+				{
+					streamWriter.Write(JsonConvert.SerializeObject(collection));
+				}
+
+			});
+
+		}
+	}
 }
