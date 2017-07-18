@@ -67,7 +67,7 @@ namespace ProjectSazan.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddItem(PhilatelicItemViewModel item, List<IFormFile> scans)
+        public async Task<IActionResult> SaveItem(PhilatelicItemViewModel item, List<IFormFile> scans)
         {
             var userIdentity = GetUserIdentity();
 
@@ -79,7 +79,7 @@ namespace ProjectSazan.Web.Controllers
                                     out DateTime dateAcquired);
 
             var philatelicItem = new PhilatelicItem {
-                Id = Guid.NewGuid(),
+                Id = item.ItemId == Guid.Empty ? Guid.NewGuid() : item.ItemId,
                 CatalogueReference = new CatalogueReference {
                     Catalogue = (CataloguesInUse)Enum.Parse(typeof(CataloguesInUse), item.Catalogue),
                     Area = item.Area,

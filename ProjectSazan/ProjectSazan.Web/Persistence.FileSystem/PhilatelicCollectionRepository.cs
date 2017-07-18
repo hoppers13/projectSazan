@@ -160,12 +160,18 @@ namespace ProjectSazan.Web.Persistence.FileSystem
                 }
                 else
                 {
+                    //TODO: update scans.
+                    if (!philatelicItem.Scans.Any())
+                    {
+                        philatelicItem.Scans = item.Scans;
+                    }
+
                     // update existing item
                     var index = collection.Items.IndexOf(item);
                     collection.Items.RemoveAt(index);
                     collection.Items.Insert(index, philatelicItem);
 
-                    //TODO: update scans.
+                    
                 }
 
                 using (var streamWriter = new StreamWriter(File.Create(path)))

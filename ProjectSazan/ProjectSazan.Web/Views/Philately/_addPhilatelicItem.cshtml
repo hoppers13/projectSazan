@@ -3,8 +3,9 @@
 @using ProjectSazan.Web.Models.PhilatelyViewModels
 @model PhilatelicItemViewModel
 
-<form asp-controller="philately" asp-action="addItem" enctype="multipart/form-data" method="post">
+<form asp-controller="philately" asp-action="saveItem" enctype="multipart/form-data" method="post">
     <input type="hidden" id="CollectionId" name="CollectionId" value="@Model.CollectionId" />
+    <input type="hidden" id="ItemId" name="ItemId"  value="@Guid.Empty" />
     <div class="row">
         <div class="col-md-11">
             <div class="row">

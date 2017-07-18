@@ -163,7 +163,8 @@
             $('.update-item').click(function () {
                 var selectedItemId = $(this).parent().attr('data-item-id');
                 var selectedItem = $.grep(collectionItems, function (e) { return e.Id == selectedItemId })[0];
-                
+
+                $('#ItemId').val(selectedItem.Id);
                 $('#Catalogue').val(selectedItem.SelectCatalogue);
                 $('#Area').val(selectedItem.Area);
                 $('#Number').val(selectedItem.Number);
@@ -173,9 +174,6 @@
                 $('#Acquired').val(selectedItem.Acquired);
                 $('#Price').val(selectedItem.Price);
                 $('#Currency').val(selectedItem.Currency);
-
-
-
             });
 
             $('#AcquiredDatePicker').datetimepicker(

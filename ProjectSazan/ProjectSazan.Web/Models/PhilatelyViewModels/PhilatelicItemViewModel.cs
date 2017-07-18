@@ -6,6 +6,7 @@ namespace ProjectSazan.Web.Models.PhilatelyViewModels
     public class PhilatelicItemViewModel
     {
         public Guid CollectionId { get; set; }
+        public Guid ItemId { get; set; }
         public string Catalogue { get; set; }
         [Required]
         public string Area { get; set; }
