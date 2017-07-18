@@ -111,6 +111,12 @@ namespace ProjectSazan.Web.Controllers
             return  RedirectToAction("collection", new { id = item.CollectionId } );
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Remove(Guid collectionId, Guid itemId)
+        {
+            return RedirectToAction("collection", new { id = collectionId });
+        }
+
         [HttpPost]
         public async Task<IActionResult> Quote(Guid collectionId, IEnumerable<Guid> items)
         {

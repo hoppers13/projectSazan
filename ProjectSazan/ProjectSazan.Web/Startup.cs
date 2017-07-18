@@ -88,6 +88,10 @@ namespace ProjectSazan.Web
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
+
+                routes.MapRoute(
+                    name: "removePhilatelicItem",
+                    template: "{controller=Philately}/{action=Remove}/{collectionId}/{itemId}");
             });
         }
     }

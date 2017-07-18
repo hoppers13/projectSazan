@@ -160,7 +160,7 @@ namespace ProjectSazan.Web.Persistence.FileSystem
                 }
                 else
                 {
-                    //TODO: update scans.
+                    // keep previous scans if no new scans provided
                     if (!philatelicItem.Scans.Any())
                     {
                         philatelicItem.Scans = item.Scans;
@@ -169,9 +169,7 @@ namespace ProjectSazan.Web.Persistence.FileSystem
                     // update existing item
                     var index = collection.Items.IndexOf(item);
                     collection.Items.RemoveAt(index);
-                    collection.Items.Insert(index, philatelicItem);
-
-                    
+                    collection.Items.Insert(index, philatelicItem);                    
                 }
 
                 using (var streamWriter = new StreamWriter(File.Create(path)))

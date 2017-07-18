@@ -16,6 +16,7 @@
         {
             item.Id,
             TargetId = $"#{item.Id}",
+            DeleteMe = $"/philately/remove/{Model.Id}/{item.Id}",
             item.Year,
             item.CatalogueReference.Area,
             SelectCatalogue = item.CatalogueReference.Catalogue.ToString(),
@@ -80,7 +81,7 @@
         <tbody>
             <tr v-for="item in items">
                 <td class="col-md-1" :data-item-id="item.Id">
-                    <a href="#" title="delete item" class="delete-item">
+                    <a :href="item.DeleteMe" title="delete item" class="delete-item">
                         <span class="glyphicon glyphicon-remove"></span>
                     </a>
                     &nbsp;
